@@ -1,0 +1,19 @@
+package com.object173.newsfeed.features.news.domain;
+
+import android.arch.lifecycle.LiveData;
+
+import com.object173.newsfeed.features.news.domain.model.News;
+
+public class NewsInteractorImpl implements NewsInteractor {
+
+    private final NewsRepository mNewsRepository;
+
+    public NewsInteractorImpl(NewsRepository newsRepository) {
+        mNewsRepository = newsRepository;
+    }
+
+    @Override
+    public LiveData<News> getNews(final Long newsId) {
+        return mNewsRepository.getNews(newsId);
+    }
+}
