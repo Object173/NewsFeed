@@ -1,12 +1,10 @@
 package com.object173.newsfeed.features.news.presentation;
 
-import android.arch.lifecycle.ViewModelProviders;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
@@ -14,6 +12,13 @@ import android.webkit.WebView;
 
 import com.object173.newsfeed.R;
 import com.object173.newsfeed.databinding.FragmentWebBinding;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 
 public class NewsFragment extends Fragment {
 
@@ -33,6 +38,7 @@ public class NewsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
         final Long newsId = getArguments().getLong(ATTR_NEWS_ID);
         mViewModel = ViewModelProviders.of(this, new NewsViewModelFactory(
@@ -66,9 +72,37 @@ public class NewsFragment extends Fragment {
             if(news != null) {
                 mBinding.webView.loadData(news.getDescription(),
                         "text/html; charset=utf-8", "UTF-8");
+
+                final AppCompatActivity activity = (AppCompatActivity)getActivity();
+                if(activity != null && activity.getSupportActionBar() != null) {
+                    activity.getSupportActionBar().setTitle(news.getTitle());
+                }
             }
+            getActivity().invalidateOptionsMenu();
         });
 
         return mBinding.getRoot();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.news_fragment, menu);
+
+        final MenuItem searchItem = menu.findItem(R.id.open_link_menu);
+        searchItem.setVisible(mViewModel.isSourceLinkEnabled());
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.share_menu:
+                mViewModel.shareNews(getActivity());
+                return true;
+            case R.id.open_link_menu:
+                mViewModel.openSourceLink(getActivity());
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

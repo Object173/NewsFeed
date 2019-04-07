@@ -1,6 +1,60 @@
 <resources>
     <string name="app_name">NewsFeed</string>
+
     <string name="add_feed">add feed</string>
     <string name="feed_link">Feed link</string>
     <string name="add">add</string>
+
+    <string name="share_news_chooser_title">Share news</string>
+    <string name="open_link_chooser">Open source link</string>
+    <string name="news_share_format">%s /n %s /n</string>
+    <string name="share_label">share</string>
+    <string name="open_source">open source</string>
+
+    <string name="feed_share_format">%s /n %s /n</string>
+
+    <string name="feed_removed_message">News feed has been deleted</string>
+    <string name="news_hidden_message">The news was hidden</string>
+    <string name="not_reviewed_count_format">News not viewed: %d</string>
+    <string name="custom_title_switch">Use custom title</string>
+    <string name="auto_updated_switch">Enabled auto updated</string>
+    <string name="main_channel_switch">Visible on main channel</string>
+    <string name="custom_feed_name">Custom feed name</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="refresh_options_category">Refresh options</string>
+    <string name="auto_refresh_enabled_title">Auto refresh</string>
+    <string name="auto_refresh_enabled_summary">Enabled auto refresh news feeds in network</string>
+
+    <string name="auto_refresh_frequency_title">Update frequency</string>
+    <string-array name="refresh_period_entities">
+        <item>1 hour</item>
+        <item>4 hours</item>
+        <item>6 hours</item>
+        <item>12 hours</item>
+        <item>1 day</item>
+    </string-array>
+
+    <string name="wifi_only_title">WI-FI only</string>
+    <string name="wifi_only_summary">Download updates only by WI-FI</string>
+
+    <string name="notification_options_category">Notifications</string>
+    <string name="notification_enabled_title">Enabled notification</string>
+    <string name="notification_enabled_summary">Display app notifications</string>
+
+    <string name="notification_type_title">Type of notification</string>
+    <string name="menu_settings_title">Settings</string>
+    <string-array name="notification_type_entities">
+        <item>Nothing</item>
+        <item>Only vibration</item>
+        <item>Sound only</item>
+        <item>Sound and vibration</item>
+    </string-array>
+
+    <string name="cache_options_category">Cache options</string>
+    <string name="cache_size_title">Cache size</string>
+    <string name="cache_size_summary">%d news</string>
+
+    <string name="cache_frequency_title">Cache frequency</string>
+    <string name="cache_frequency_summary">%d days</string>
 </resources>

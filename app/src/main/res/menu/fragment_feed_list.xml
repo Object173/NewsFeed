@@ -5,4 +5,9 @@
         android:icon="@android:drawable/ic_menu_compass"
         android:title="@string/add"
         app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/settings"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:title="@string/menu_settings_title"
+        app:showAsAction="ifRoom" />
 </menu>

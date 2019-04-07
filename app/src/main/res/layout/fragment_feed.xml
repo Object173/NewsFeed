@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="feed"
+            type="com.object173.newsfeed.features.feed.presentation.FeedBinding"/>
+    </data>
+
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+
+        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/linkET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@={feed.link}"
+                    android:enabled="@{feed.newFeed}"
+                    android:hint="@string/feed_link"/>
+
+                <TextView
+                    android:id="@+id/titleTV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{feed.title != null ? View.VISIBLE : View.GONE}"
+                    android:text="@{feed.title}"
+                    android:padding="4dp"/>
+
+                <TextView
+                    android:id="@+id/descriptionTV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{feed.description != null ? View.VISIBLE : View.GONE}"
+                    android:text="@{feed.description}"
+                    android:padding="4dp"/>
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/customNameET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="@{feed.isCustomName ? View.VISIBLE : View.GONE}"
+                    android:text="@={feed.customName}"
+                    android:hint="@string/custom_feed_name"/>
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/customNameSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/custom_title_switch"
+                    android:checked="@={feed.isCustomName}"
+                    android:layout_marginEnd="4dp"/>
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/autoUpdateSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="@={feed.isAutoRefresh}"
+                    android:text="@string/auto_updated_switch"
+                    android:layout_marginEnd="4dp"/>
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/mainChannelSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="@={feed.isMainChannel}"
+                    android:text="@string/main_channel_switch"
+                    android:layout_marginEnd="4dp"/>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </FrameLayout>
+
+</layout>

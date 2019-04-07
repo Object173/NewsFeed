@@ -1,7 +1,8 @@
 package com.object173.newsfeed.libs.log;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 final class ConsoleLogger implements ILogger {
     private final String tag;

@@ -1,16 +1,18 @@
 package com.object173.newsfeed.features.newslist.presentation;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.ViewModel;
-import android.arch.paging.DataSource;
-import android.arch.paging.LivePagedListBuilder;
-import android.arch.paging.PagedList;
-
 import com.object173.newsfeed.features.newslist.domain.NewsInteractor;
 import com.object173.newsfeed.features.newslist.domain.model.News;
 import com.object173.newsfeed.features.newslist.domain.model.RequestResult;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.Executors;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModel;
+import androidx.paging.DataSource;
+import androidx.paging.LivePagedListBuilder;
+import androidx.paging.PagedList;
 
 class NewsListViewModel extends ViewModel {
 
@@ -22,6 +24,8 @@ class NewsListViewModel extends ViewModel {
     private final String mFeedLink;
     private LiveData<PagedList<News>> mNewsData;
     private LiveData<RequestResult> mRequestResult;
+
+    private final List<Long> mReviewedNews = new LinkedList<>();
 
     NewsListViewModel(final NewsInteractor newsInteractor, final String feedLink) {
         mNewsInteractor = newsInteractor;
@@ -57,5 +61,20 @@ class NewsListViewModel extends ViewModel {
 
     void cancelRefresh() {
         mRequestResult = null;
+    }
+
+    LiveData<Boolean> hideNews(int position) {
+        return mNewsInteractor.hideNews(mNewsData.getValue().get(position).getId());
+    }
+
+    void onNewsReviewed(final News news) {
+        mReviewedNews.add(news.getId());
+    }
+
+    void setReviewedNews() {
+        for(Long id : mReviewedNews) {
+            mNewsInteractor.checkReviewed(id);
+        }
+        mReviewedNews.clear();
     }
 }

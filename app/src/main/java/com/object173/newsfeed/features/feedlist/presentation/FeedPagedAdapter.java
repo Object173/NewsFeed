@@ -1,10 +1,5 @@
 package com.object173.newsfeed.features.feedlist.presentation;
 
-import android.arch.paging.PagedListAdapter;
-import android.databinding.DataBindingUtil;
-import android.support.annotation.NonNull;
-import android.support.v7.util.DiffUtil;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -12,10 +7,24 @@ import com.object173.newsfeed.R;
 import com.object173.newsfeed.databinding.ItemFeedListBinding;
 import com.object173.newsfeed.features.feedlist.domain.model.Feed;
 
+import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
+import androidx.paging.PagedListAdapter;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
+
 public class FeedPagedAdapter extends PagedListAdapter<Feed, FeedPagedAdapter.FeedViewHolder> {
 
-    FeedPagedAdapter() {
+    private final OnFeedClickListener mFeedClickListener;
+
+    public interface OnFeedClickListener {
+        void onClick(Feed feed);
+        boolean onLongClick(Feed feed);
+    }
+
+    FeedPagedAdapter(final OnFeedClickListener feedClickListener) {
         super(new FeedDiffUtilCallback());
+        mFeedClickListener = feedClickListener;
     }
 
     @NonNull
@@ -30,6 +39,9 @@ public class FeedPagedAdapter extends PagedListAdapter<Feed, FeedPagedAdapter.Fe
     @Override
     public void onBindViewHolder(@NonNull final FeedViewHolder feedViewHolder, final int position) {
         feedViewHolder.bindFeed(getItem(position));
+
+        feedViewHolder.itemView.setOnClickListener(view -> mFeedClickListener.onClick(getItem(position)));
+        feedViewHolder.itemView.setOnLongClickListener(view -> mFeedClickListener.onLongClick(getItem(position)));
     }
 
     static class FeedViewHolder extends RecyclerView.ViewHolder {
@@ -39,11 +51,10 @@ public class FeedPagedAdapter extends PagedListAdapter<Feed, FeedPagedAdapter.Fe
         FeedViewHolder(final ItemFeedListBinding binding) {
             super(binding.getRoot());
             mBinding = binding;
-            mBinding.setFeed(new FeedItemViewModel());
         }
 
         void bindFeed(final Feed feed) {
-            mBinding.getFeed().setFeed(feed);
+            mBinding.setFeed(feed);
             mBinding.executePendingBindings();
         }
     }

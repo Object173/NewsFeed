@@ -38,7 +38,7 @@ public final class RssFeed implements FeedDTO {
 
     @Override
     public Date getUpdated() {
-        return null;
+        return feed != null ? feed.updated : null;
     }
 
     @Override
@@ -66,6 +66,8 @@ public final class RssFeed implements FeedDTO {
         private String description;
         @XmlField(tag="author")
         private String author;
+        @XmlField(tag="lastBuildDate")
+        private Date updated;
         @XmlField
         private Icon icon;
 
@@ -80,7 +82,7 @@ public final class RssFeed implements FeedDTO {
         }
 
         @XmlObject(tag = "icon")
-        static final class Icon {
+        public static final class Icon {
             @XmlField(tag = "url")
             private String url;
         }
@@ -94,7 +96,7 @@ public final class RssFeed implements FeedDTO {
             private String description;
             @XmlField(tag = "link")
             private String sourceLink;
-            @XmlField(tag = "updated")
+            @XmlField(tag = "pubDate")
             private Date publicationDate;
 
             @Override

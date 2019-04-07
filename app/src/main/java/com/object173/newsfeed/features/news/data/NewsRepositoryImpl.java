@@ -1,8 +1,9 @@
 package com.object173.newsfeed.features.news.data;
-import android.arch.lifecycle.LiveData;
 
 import com.object173.newsfeed.features.news.domain.NewsRepository;
 import com.object173.newsfeed.features.news.domain.model.News;
+
+import androidx.lifecycle.LiveData;
 
 public class NewsRepositoryImpl implements NewsRepository {
 

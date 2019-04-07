@@ -1,10 +1,10 @@
 package com.object173.newsfeed.features.newslist.domain;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.paging.DataSource;
-
 import com.object173.newsfeed.features.newslist.domain.model.News;
 import com.object173.newsfeed.features.newslist.domain.model.RequestResult;
+
+import androidx.lifecycle.LiveData;
+import androidx.paging.DataSource;
 
 public class NewsInteractorImpl implements NewsInteractor {
 
@@ -21,11 +21,21 @@ public class NewsInteractorImpl implements NewsInteractor {
 
     @Override
     public DataSource.Factory<Integer, News> getNewsDataSource() {
-        return mNewsRepository.getNewsDataSource();
+        return mNewsRepository.getLocalDataSource();
     }
 
     @Override
     public DataSource.Factory<Integer, News> getNewsDataSource(String feedLink) {
         return mNewsRepository.getNewsDataSource(feedLink);
+    }
+
+    @Override
+    public LiveData<Boolean> hideNews(long id) {
+        return mNewsRepository.hideNews(id);
+    }
+
+    @Override
+    public void checkReviewed(long id) {
+        mNewsRepository.checkReviewed(id);
     }
 }

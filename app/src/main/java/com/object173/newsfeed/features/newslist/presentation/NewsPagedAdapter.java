@@ -1,10 +1,5 @@
 package com.object173.newsfeed.features.newslist.presentation;
 
-import android.arch.paging.PagedListAdapter;
-import android.databinding.DataBindingUtil;
-import android.support.annotation.NonNull;
-import android.support.v7.util.DiffUtil;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -12,10 +7,24 @@ import com.object173.newsfeed.R;
 import com.object173.newsfeed.databinding.ItemNewsListBinding;
 import com.object173.newsfeed.features.newslist.domain.model.News;
 
+import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
+import androidx.paging.PagedListAdapter;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
+
 public class NewsPagedAdapter extends PagedListAdapter<News, NewsPagedAdapter.NewsViewHolder> {
 
-    NewsPagedAdapter() {
+    public interface OnNewsItemListener {
+        void onClick(News news);
+        void onReviewed(News news);
+    }
+
+    private final OnNewsItemListener mNewsItemListener;
+
+    NewsPagedAdapter(OnNewsItemListener newsItemListener) {
         super(new NewsDiffUtilCallback());
+        mNewsItemListener = newsItemListener;
     }
 
     @NonNull
@@ -29,7 +38,11 @@ public class NewsPagedAdapter extends PagedListAdapter<News, NewsPagedAdapter.Ne
 
     @Override
     public void onBindViewHolder(@NonNull final NewsViewHolder newsViewHolder, final int position) {
-        newsViewHolder.bindNews(getItem(position));
+        final News news = getItem(position);
+        newsViewHolder.bindNews(news);
+
+        newsViewHolder.itemView.setOnClickListener(view -> mNewsItemListener.onClick(getItem(position)));
+        mNewsItemListener.onReviewed(news);
     }
 
     static class NewsDiffUtilCallback extends DiffUtil.ItemCallback<News> {
@@ -52,11 +65,10 @@ public class NewsPagedAdapter extends PagedListAdapter<News, NewsPagedAdapter.Ne
         NewsViewHolder(final ItemNewsListBinding binding) {
             super(binding.getRoot());
             mBinding = binding;
-            mBinding.setNews(new NewsItemViewModel());
         }
 
         void bindNews(final News news) {
-            mBinding.getNews().setNews(news);
+            mBinding.setNews(news);
             mBinding.executePendingBindings();
         }
     }

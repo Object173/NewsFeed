@@ -74,13 +74,13 @@ public final class AtomFeed implements FeedDTO {
     }
 
     @XmlObject(tag = "link")
-    static final class Link {
+    public static final class Link {
         @XmlAttribute(key = "href")
         private String link;
     }
 
     @XmlObject(tag = "author")
-    static final class Author {
+    public static final class Author {
         @XmlAttribute(key = "name")
         private String name;
     }

@@ -1,19 +1,16 @@
 package com.object173.newsfeed.db.entities;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
-import android.arch.persistence.room.TypeConverters;
-import android.support.annotation.NonNull;
-
-import com.object173.newsfeed.libs.parser.dto.FeedDTO;
-import com.object173.newsfeed.libs.parser.dto.NewsDTO;
-
 import java.util.Date;
-import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Embedded;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverters;
 
 @Entity
-public class FeedDB implements FeedDTO {
+public class FeedDB {
 
     @PrimaryKey
     @ColumnInfo(index = true)
@@ -23,10 +20,16 @@ public class FeedDB implements FeedDTO {
     public String title;
     public String description;
     public String sourceLink;
+
     @TypeConverters({DateConverter.class})
     public Date updated;
+
     public String iconLink;
     public String author;
+
+    public String customName;
+    public boolean isAutoRefresh;
+    public boolean isMainChannel;
 
     public static FeedDB create(@NonNull String link, String title, String description,
                                 String sourceLink, Date updated, String iconLink,
@@ -42,44 +45,20 @@ public class FeedDB implements FeedDTO {
         return result;
     }
 
-    @Override
-    @NonNull
-    public String getLink() {
-        return link;
+    public static FeedDB create(@NonNull String link, String title, String description,
+                                String sourceLink, Date updated, String iconLink,
+                                String author, String customName, boolean isAutoRefresh, boolean isMainChannel) {
+        final FeedDB result = create(link, title, description, sourceLink, updated, iconLink, author);
+        result.customName = customName;
+        result.isAutoRefresh = isAutoRefresh;
+        result.isMainChannel = isMainChannel;
+        return result;
     }
 
-    @Override
-    public String getTitle() {
-        return title;
-    }
+    public static class FeedWithReviewed {
+        @Embedded
+        public FeedDB feed;
 
-    @Override
-    public String getDescription() {
-        return description;
-    }
-
-    @Override
-    public String getSourceLink() {
-        return sourceLink;
-    }
-
-    @Override
-    public Date getUpdated() {
-        return updated;
-    }
-
-    @Override
-    public String getIconLink() {
-        return iconLink;
-    }
-
-    @Override
-    public String getAuthor() {
-        return author;
-    }
-
-    @Override
-    public List<NewsDTO> getNewsList() {
-        return null;
+        public int notReviewedCount;
     }
 }

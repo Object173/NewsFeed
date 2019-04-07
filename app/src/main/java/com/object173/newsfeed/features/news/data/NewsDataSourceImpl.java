@@ -1,12 +1,11 @@
 package com.object173.newsfeed.features.news.data;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Transformations;
-import android.arch.paging.DataSource;
-
 import com.object173.newsfeed.db.AppDatabase;
 import com.object173.newsfeed.db.entities.NewsDB;
 import com.object173.newsfeed.features.news.domain.model.News;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Transformations;
 
 public class NewsDataSourceImpl implements NewsDataSource {
 

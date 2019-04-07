@@ -1,4 +1,4 @@
-package com.object173.newsfeed.features.feedloader.domain.model;
+package com.object173.newsfeed.features.feed.domain.model;
 
 public enum RequestResult {
     RUNNING,

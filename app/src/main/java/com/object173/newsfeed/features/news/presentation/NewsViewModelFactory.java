@@ -1,9 +1,6 @@
 package com.object173.newsfeed.features.news.presentation;
 
 import android.app.Application;
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
-import android.support.annotation.NonNull;
 
 import com.object173.newsfeed.App;
 import com.object173.newsfeed.features.news.data.NewsDataSource;
@@ -12,6 +9,10 @@ import com.object173.newsfeed.features.news.data.NewsRepositoryImpl;
 import com.object173.newsfeed.features.news.domain.NewsInteractor;
 import com.object173.newsfeed.features.news.domain.NewsInteractorImpl;
 import com.object173.newsfeed.features.news.domain.NewsRepository;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 public class NewsViewModelFactory extends ViewModelProvider.AndroidViewModelFactory {
 

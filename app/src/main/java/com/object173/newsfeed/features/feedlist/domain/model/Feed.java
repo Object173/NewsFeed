@@ -6,19 +6,17 @@ public class Feed {
     private final String link;
     private final String title;
     private final String description;
-    private final String sourceLink;
     private final Date updated;
     private final String iconLink;
-    private final String author;
+    private final int notReviewedCount;
 
-    public Feed(String link, String title, String description, String sourceLink, Date updated, String iconLink, String author) {
+    public Feed(String link, String title, String description, Date updated, String iconLink, int notReviewedCount) {
         this.link = link;
         this.title = title;
         this.description = description;
-        this.sourceLink = sourceLink;
         this.updated = updated;
         this.iconLink = iconLink;
-        this.author = author;
+        this.notReviewedCount = notReviewedCount;
     }
 
     public String getLink() {
@@ -33,10 +31,6 @@ public class Feed {
         return description;
     }
 
-    public String getSourceLink() {
-        return sourceLink;
-    }
-
     public Date getUpdated() {
         return updated;
     }
@@ -45,7 +39,7 @@ public class Feed {
         return iconLink;
     }
 
-    public String getAuthor() {
-        return author;
+    public int getNotReviewedCount() {
+        return notReviewedCount;
     }
 }

@@ -1,9 +1,6 @@
 package com.object173.newsfeed.features.feedlist.presentation;
 
 import android.app.Application;
-import android.arch.lifecycle.ViewModel;
-import android.arch.lifecycle.ViewModelProvider;
-import android.support.annotation.NonNull;
 
 import com.object173.newsfeed.App;
 import com.object173.newsfeed.features.feedlist.data.FeedDataSource;
@@ -12,6 +9,10 @@ import com.object173.newsfeed.features.feedlist.data.FeedRepositoryImpl;
 import com.object173.newsfeed.features.feedlist.domain.FeedInteractor;
 import com.object173.newsfeed.features.feedlist.domain.FeedInteractorImpl;
 import com.object173.newsfeed.features.feedlist.domain.FeedRepository;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 public class FeedListViewModelFactory extends ViewModelProvider.AndroidViewModelFactory {
 

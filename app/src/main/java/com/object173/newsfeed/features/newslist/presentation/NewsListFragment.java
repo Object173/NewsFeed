@@ -1,22 +1,27 @@
 package com.object173.newsfeed.features.newslist.presentation;
 
-import android.arch.lifecycle.ViewModelProviders;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.object173.newsfeed.R;
 import com.object173.newsfeed.databinding.FragmentListBinding;
+import com.object173.newsfeed.features.ItemTouchHelperCallback;
+import com.object173.newsfeed.features.news.presentation.NewsActivity;
+import com.object173.newsfeed.features.newslist.domain.model.News;
 import com.object173.newsfeed.features.newslist.domain.model.RequestResult;
 import com.object173.newsfeed.libs.log.ILogger;
 import com.object173.newsfeed.libs.log.LoggerFactory;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 public class NewsListFragment extends Fragment {
 
@@ -60,12 +65,40 @@ public class NewsListFragment extends Fragment {
         }
 
         mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mPagedAdapter = new NewsPagedAdapter();
+        mPagedAdapter = new NewsPagedAdapter(new NewsPagedAdapter.OnNewsItemListener() {
+            @Override
+            public void onClick(News news) {
+                startActivity(NewsActivity.getIntent(getActivity(), news.getId()));
+            }
+
+            @Override
+            public void onReviewed(News news) {
+                mViewModel.onNewsReviewed(news);
+            }
+        });
         mBinding.recyclerView.setAdapter(mPagedAdapter);
+
+        final ItemTouchHelper.Callback callback = new ItemTouchHelperCallback(this::hideNews);
+        final ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(mBinding.recyclerView);
 
         mViewModel.getNewsData().observe(this, news -> mPagedAdapter.submitList(news));
 
         return mBinding.getRoot();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mViewModel.setReviewedNews();
+    }
+
+    private void hideNews(final int position) {
+        mViewModel.hideNews(position).observe(this, result -> {
+            if(result == Boolean.TRUE) {
+                Snackbar.make(mBinding.getRoot(), R.string.news_hidden_message, Snackbar.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void onUpdateStatus(RequestResult requestResult) {

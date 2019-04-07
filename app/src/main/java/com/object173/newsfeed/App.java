@@ -1,24 +1,27 @@
 package com.object173.newsfeed;
 
 import android.app.Application;
-import android.arch.persistence.room.Room;
 import android.content.Context;
 
 import com.object173.newsfeed.db.AppDatabase;
-import com.object173.newsfeed.libs.network.ResponseParser;
+import com.object173.newsfeed.libs.network.Downloader;
+import com.object173.newsfeed.libs.network.DownloaderFactory;
 import com.object173.newsfeed.libs.parser.FeedParserFactory;
+import com.object173.newsfeed.libs.parser.dto.FeedDTO;
+
+import androidx.room.Room;
 
 public class App extends Application {
 
     private AppDatabase database;
-    private ResponseParser feedParser;
+    private Downloader<FeedDTO> downloader;
 
     public static AppDatabase getDatabase(final Context context) {
         return getApp(context).database;
     }
 
-    public static ResponseParser getFeedParser(final Context context) {
-        return getApp(context).feedParser;
+    public static Downloader<FeedDTO> getDownloader(final Context context) {
+        return getApp(context).downloader;
     }
 
     private static App getApp(final Context context) {
@@ -32,6 +35,6 @@ public class App extends Application {
         database = Room.databaseBuilder(this, AppDatabase.class, "database")
                 .build();
 
-        feedParser = FeedParserFactory.getFeedParser();
+        downloader  = DownloaderFactory.get(FeedParserFactory.getFeedParser());
     }
 }

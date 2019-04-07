@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pref_key_auto_refresh">pref_key_auto_refresh</string>
+    <bool name="pref_auto_refresh_default">false</bool>
+
+    <string name="pref_key_refresh_period">refresh_frequency</string>
+    <string-array name="pref_refresh_period_values">
+        <item>1</item>
+        <item>4</item>
+        <item>6</item>
+        <item>12</item>
+        <item>24</item>
+    </string-array>
+    <string name="pref_refresh_period_default">1</string>
+
+    <string name="pref_key_wifi_only">wifi_only</string>
+    <bool name="pref_wifi_only_default">true</bool>
+
+    <string name="pref_key_notification_enabled">pref_key_notification_enabled</string>
+    <bool name="pref_notification_enabled_default">true</bool>
+
+    <string name="pref_key_notification_type">notification_type</string>
+    <string-array name="pref_notification_type_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string name="pref_notification_type_default">3</string>
+
+    <string name="pref_key_cache_size">cache_size</string>
+    <integer name="cache_size_min">10</integer>
+    <integer name="cache_size_max">250</integer>
+    <integer name="cache_size_default">100</integer>
+
+    <string name="pref_key_cache_frequency">cache_frequency</string>
+    <integer name="cache_frequency_min">1</integer>
+    <integer name="cache_frequency_max">30</integer>
+    <integer name="cache_frequency_default">7</integer>
+</resources>

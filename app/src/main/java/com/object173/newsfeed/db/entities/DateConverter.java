@@ -1,17 +1,17 @@
 package com.object173.newsfeed.db.entities;
 
-import android.arch.persistence.room.TypeConverter;
-
 import java.util.Date;
+
+import androidx.room.TypeConverter;
 
 public class DateConverter {
     @TypeConverter
-    public String fromHobbies(Date date) {
-        return date != null ? date.toString() : null;
+    public Long fromHobbies(Date date) {
+        return date != null ? date.getTime() : null;
     }
 
     @TypeConverter
-    public Date toHobbies(String data) {
+    public Date toHobbies(Long data) {
         return data != null ? new Date(data) : null;
     }
 }
