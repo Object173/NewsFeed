@@ -91,7 +91,7 @@ public class UpdateFeedWorker extends Worker {
 
         List<NewsDB> newsList = new LinkedList<>();
         for(NewsDTO newsDTO : feedDTO.getNewsList()) {
-            if(!dataSource.isExist(feedLink, newsDTO.getPublicationDate())) {
+            if(!dataSource.isNewsExist(feedLink, newsDTO.getPublicationDate())) {
                 newsList.add(convertNews(feedLink, newsDTO));
             }
         }

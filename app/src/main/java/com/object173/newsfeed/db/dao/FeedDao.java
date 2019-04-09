@@ -39,6 +39,10 @@ public interface FeedDao {
             "as notReviewedCount FROM feeddb ORDER BY updated DESC")
     DataSource.Factory<Integer, FeedDB.FeedWithReviewed> getFeedList();
 
+    @Transaction
+    @Query("SELECT * FROM feeddb WHERE isAutoRefresh ORDER BY updated")
+    List<FeedDB> getAutoUpdated();
+
     @Insert
     void insert(FeedDB feed);
 

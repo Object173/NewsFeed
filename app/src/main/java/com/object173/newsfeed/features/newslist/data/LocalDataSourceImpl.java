@@ -33,7 +33,7 @@ public class LocalDataSourceImpl implements LocalDataSource {
     }
 
     @Override
-    public boolean isExist(String feedLink, Date pubDate) {
+    public boolean isNewsExist(String feedLink, Date pubDate) {
         return mDatabase.newsDao().isExist(feedLink, pubDate) > 0;
     }
 

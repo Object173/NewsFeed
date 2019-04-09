@@ -14,7 +14,7 @@ public interface LocalDataSource {
     DataSource.Factory<Integer, News> getNewsDataSource();
     DataSource.Factory<Integer, News> getNewsDataSource(String feedLink);
 
-    boolean isExist(String feedLink, Date pubDate);
+    boolean isNewsExist(String feedLink, Date pubDate);
 
     int hideNews(long id);
     void checkReviewed(long id);

@@ -27,13 +27,7 @@
     <string name="auto_refresh_enabled_summary">Enabled auto refresh news feeds in network</string>
 
     <string name="auto_refresh_frequency_title">Update frequency</string>
-    <string-array name="refresh_period_entities">
-        <item>1 hour</item>
-        <item>4 hours</item>
-        <item>6 hours</item>
-        <item>12 hours</item>
-        <item>1 day</item>
-    </string-array>
+    <string name="auto_refresh_frequency_summary">hours</string>
 
     <string name="wifi_only_title">WI-FI only</string>
     <string name="wifi_only_summary">Download updates only by WI-FI</string>
@@ -53,8 +47,8 @@
 
     <string name="cache_options_category">Cache options</string>
     <string name="cache_size_title">Cache size</string>
-    <string name="cache_size_summary">%d news</string>
+    <string name="cache_size_summary">news</string>
 
     <string name="cache_frequency_title">Cache frequency</string>
-    <string name="cache_frequency_summary">%d days</string>
+    <string name="cache_frequency_summary">days</string>
 </resources>

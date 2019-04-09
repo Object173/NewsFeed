@@ -9,24 +9,25 @@
         android:title="@string/refresh_options_category">
 
         <androidx.preference.SwitchPreference
-            android:key="@string/pref_key_auto_refresh"
+            android:key="@string/pref_key_auto_refresh_enabled"
             android:title="@string/auto_refresh_enabled_title"
             android:summary="@string/auto_refresh_enabled_summary"
             android:defaultValue="@bool/pref_auto_refresh_default"/>
 
-        <androidx.preference.ListPreference
+        <androidx.preference.SeekBarPreference
             android:key="@string/pref_key_refresh_period"
             android:title="@string/auto_refresh_frequency_title"
-            android:dialogTitle="@string/auto_refresh_frequency_title"
-            android:entries="@array/refresh_period_entities"
-            android:entryValues="@array/pref_refresh_period_values"
-            android:defaultValue="@string/pref_refresh_period_default"
-            android:dependency="@string/pref_key_auto_refresh"
-            android:summary="%s"/>
+            android:summary="@string/auto_refresh_frequency_summary"
+            asp:min="@integer/auto_refresh_frequency_min"
+            android:max="@integer/auto_refresh_frequency_max"
+            asp:showSeekBarValue="true"
+            android:defaultValue="@integer/auto_refresh_frequency_default"
+            android:dependency="@string/pref_key_auto_refresh_enabled"/>
+
 
         <androidx.preference.SwitchPreferenceCompat
             android:key="@string/pref_key_wifi_only"
-            android:dependency="@string/pref_key_auto_refresh"
+            android:dependency="@string/pref_key_auto_refresh_enabled"
             android:summary="@string/wifi_only_summary"
             android:title="@string/wifi_only_title"
             android:defaultValue="@bool/pref_wifi_only_default"/>
@@ -60,6 +61,7 @@
         <androidx.preference.SeekBarPreference
             android:key="@string/pref_key_cache_size"
             android:title="@string/cache_size_title"
+            android:summary="@string/cache_size_summary"
             asp:min="@integer/cache_size_min"
             android:max="@integer/cache_size_max"
             asp:showSeekBarValue="true"
@@ -68,6 +70,7 @@
         <androidx.preference.SeekBarPreference
             android:key="@string/pref_key_cache_frequency"
             android:title="@string/cache_frequency_title"
+            android:summary="@string/cache_frequency_summary"
             asp:min="@integer/cache_frequency_min"
             asp:showSeekBarValue="true"
             android:max="@integer/cache_frequency_max"
