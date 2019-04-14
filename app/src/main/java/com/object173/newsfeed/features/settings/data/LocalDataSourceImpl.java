@@ -11,7 +11,7 @@ public class LocalDataSourceImpl implements LocalDataSource {
 
     private final AppDatabase mDatabase;
 
-    LocalDataSourceImpl(AppDatabase database) {
+    public LocalDataSourceImpl(AppDatabase database) {
         mDatabase = database;
     }
 
@@ -21,21 +21,36 @@ public class LocalDataSourceImpl implements LocalDataSource {
     }
 
     @Override
-    public boolean isNewsExist(String feedLink, Date pubDate) {
-        return mDatabase.newsDao().isExist(feedLink, pubDate) > 0;
-    }
-
-    @Override
     public void setFeedUpdated(String feedLink, Date updated) {
         mDatabase.feedDao().setUpdated(feedLink, updated);
     }
 
     @Override
-    public long refreshNews(String feedLink, List<NewsDB> newsList, int cacheSize, Date cropDate) {
-        long count = mDatabase.newsDao().insert(newsList).length;
+    public int refreshNews(List<NewsDB> newsList, int cacheSize, Date cropDate) {
+        if(newsList.isEmpty()) {
+            return 0;
+        }
+
+        String feedLink = newsList.get(0).feedLink;
+        int count = 0;
+
+        for(int i = 0; i < newsList.size() && i < cacheSize; i++) {
+            NewsDB newsDB = newsList.get(i);
+            if(isNewsExist(feedLink, newsDB.pubDate) ||
+                    newsDB.pubDate.getTime() <= cropDate.getTime()) {
+                break;
+            }
+            mDatabase.newsDao().insert(newsDB);
+            count++;
+        }
+
         mDatabase.newsDao().cropDate(feedLink, cropDate);
         mDatabase.newsDao().cropCount(feedLink, cacheSize);
 
         return count;
+    }
+
+    private boolean isNewsExist(String feedLink, Date pubDate) {
+        return mDatabase.newsDao().isExist(feedLink, pubDate) > 0;
     }
 }

@@ -31,12 +31,21 @@ public class NewsListFragment extends Fragment {
     private FragmentListBinding mBinding;
     private NewsPagedAdapter mPagedAdapter;
 
+    private static final String ATTR_FEED_CATEGORY = "category";
     private static final String ATTR_FEED_LINK = "feed_link";
 
-    public static NewsListFragment newInstance(final String feedLink) {
+    public static NewsListFragment newInstanceByFeed(final String feedLink) {
         final NewsListFragment result = new NewsListFragment();
         Bundle args = new Bundle();
         args.putString(ATTR_FEED_LINK, feedLink);
+        result.setArguments(args);
+        return result;
+    }
+
+    public static NewsListFragment newInstanceByCategory(final String category) {
+        final NewsListFragment result = new NewsListFragment();
+        Bundle args = new Bundle();
+        args.putString(ATTR_FEED_CATEGORY, category);
         result.setArguments(args);
         return result;
     }
@@ -46,9 +55,22 @@ public class NewsListFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         String feedLink = getArguments().getString(ATTR_FEED_LINK);
-        mViewModel = ViewModelProviders.of(this, new NewsListViewModelFactory(
-                getActivity().getApplication(), feedLink)).get(NewsListViewModel.class);
+        String category = getArguments().getString(ATTR_FEED_CATEGORY);
 
+        NewsListViewModelFactory factory = category != null ?
+                NewsListViewModelFactory.getByCategory(getActivity().getApplication(), category) :
+                NewsListViewModelFactory.getByFeed(getActivity().getApplication(), feedLink);
+
+        mViewModel = ViewModelProviders.of(this, factory).get(NewsListViewModel.class);
+    }
+
+    public void setCategory(String category) {
+        if(mPagedAdapter.getCurrentList() != null) {
+            mPagedAdapter.submitList(null);
+        }
+        mViewModel.setCategory(category).observe(this, feedList -> {
+            mPagedAdapter.submitList(feedList);
+        });
     }
 
     @Override

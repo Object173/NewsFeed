@@ -12,18 +12,16 @@ import androidx.paging.DataSource;
 
 public interface LocalDataSource {
     DataSource.Factory<Integer, News> getNewsDataSource();
-    DataSource.Factory<Integer, News> getNewsDataSource(String feedLink);
+    DataSource.Factory<Integer, News> getNewsByFeed(String feedLink);
+    DataSource.Factory<Integer, News> getNewsByCategory(String category);
 
     boolean isNewsExist(String feedLink, Date pubDate);
 
     int hideNews(long id);
     void checkReviewed(long id);
 
-    boolean isFeedExists(String feedLink);
     void setFeedUpdated(String feedLink, Date updated);
+    int refreshNews(List<NewsDB> newsList, int cacheSize, Date cropDate);
 
-    long refreshNews(String feedLink, List<NewsDB> newsList, int cacheSize, Date cropDate);
-
-    int getCacheSize(Context context);
-    int getCacheFrequency(Context context);
+    List<String> getFeedsByCategory(String category);
 }

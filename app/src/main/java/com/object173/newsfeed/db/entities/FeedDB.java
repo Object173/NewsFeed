@@ -6,10 +6,16 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Embedded;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
+import androidx.room.Relation;
 import androidx.room.TypeConverters;
 
-@Entity
+import static androidx.room.ForeignKey.CASCADE;
+import static androidx.room.ForeignKey.SET_NULL;
+
+@Entity(foreignKeys = @ForeignKey(entity = CategoryDB.class, parentColumns = "title",
+        childColumns = "category", onUpdate = CASCADE, onDelete = SET_NULL))
 public class FeedDB {
 
     @PrimaryKey
@@ -29,11 +35,11 @@ public class FeedDB {
 
     public String customName;
     public boolean isAutoRefresh;
-    public boolean isMainChannel;
+    public String category;
 
     public static FeedDB create(@NonNull String link, String title, String description,
                                 String sourceLink, Date updated, String iconLink,
-                                String author) {
+                                String author, String category) {
         final FeedDB result = new FeedDB();
         result.link = link;
         result.title = title;
@@ -42,16 +48,16 @@ public class FeedDB {
         result.updated = updated;
         result.iconLink = iconLink;
         result.author = author;
+        result.category = category;
         return result;
     }
 
     public static FeedDB create(@NonNull String link, String title, String description,
                                 String sourceLink, Date updated, String iconLink,
-                                String author, String customName, boolean isAutoRefresh, boolean isMainChannel) {
-        final FeedDB result = create(link, title, description, sourceLink, updated, iconLink, author);
+                                String author, String customName, boolean isAutoRefresh, String category) {
+        final FeedDB result = create(link, title, description, sourceLink, updated, iconLink, author, category);
         result.customName = customName;
         result.isAutoRefresh = isAutoRefresh;
-        result.isMainChannel = isMainChannel;
         return result;
     }
 

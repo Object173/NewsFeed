@@ -28,8 +28,13 @@ public class LocalDataSourceImpl implements LocalDataSource {
     }
 
     @Override
-    public DataSource.Factory<Integer, News> getNewsDataSource(final String feedLink) {
+    public DataSource.Factory<Integer, News> getNewsByFeed(final String feedLink) {
         return mDatabase.newsDao().getAllDataSource(feedLink).map(LocalDataSourceImpl::convertToNews);
+    }
+
+    @Override
+    public DataSource.Factory<Integer, News> getNewsByCategory(String category) {
+        return mDatabase.newsDao().getByCategory(category).map(LocalDataSourceImpl::convertToNews);
     }
 
     @Override
@@ -48,18 +53,29 @@ public class LocalDataSourceImpl implements LocalDataSource {
     }
 
     @Override
-    public boolean isFeedExists(String feedLink) {
-        return mDatabase.feedDao().isExist(feedLink) > 0;
-    }
-
-    @Override
     public void setFeedUpdated(String feedLink, Date updated) {
         mDatabase.feedDao().setUpdated(feedLink, updated);
     }
 
     @Override
-    public long refreshNews(String feedLink, List<NewsDB> newsList, int cacheSize, Date cropDate) {
-        long count = mDatabase.newsDao().insert(newsList).length;
+    public int refreshNews(List<NewsDB> newsList, int cacheSize, Date cropDate) {
+        if(newsList.isEmpty()) {
+            return 0;
+        }
+
+        String feedLink = newsList.get(0).feedLink;
+        int count = 0;
+
+        for(int i = 0; i < newsList.size() && i < cacheSize; i++) {
+            NewsDB newsDB = newsList.get(i);
+            if(isNewsExist(feedLink, newsDB.pubDate) ||
+                    newsDB.pubDate.getTime() <= cropDate.getTime()) {
+                break;
+            }
+            mDatabase.newsDao().insert(newsDB);
+            count++;
+        }
+
         mDatabase.newsDao().cropDate(feedLink, cropDate);
         mDatabase.newsDao().cropCount(feedLink, cacheSize);
 
@@ -67,20 +83,17 @@ public class LocalDataSourceImpl implements LocalDataSource {
     }
 
     @Override
-    public int getCacheSize(Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getInt(context.getString(R.string.pref_key_cache_size),
-                context.getResources().getInteger(R.integer.cache_size_default));
-    }
-
-    @Override
-    public int getCacheFrequency(Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getInt(context.getString(R.string.pref_key_cache_frequency),
-                context.getResources().getInteger(R.integer.cache_frequency_default));
+    public List<String> getFeedsByCategory(String category) {
+        if(category != null) {
+            return mDatabase.feedDao().getListByCategory(category);
+        }
+        else {
+            return mDatabase.feedDao().getListByCategory();
+        }
     }
 
     private static News convertToNews(NewsDB newsDB) {
-        return new News(newsDB.id, newsDB.title, newsDB.pubDate, newsDB.isReviewed);
+        return new News(newsDB.id, newsDB.feedLink, newsDB.title, newsDB.description,
+                newsDB.pubDate, newsDB.sourceLink);
     }
 }

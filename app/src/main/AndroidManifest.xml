@@ -26,7 +26,15 @@
         <activity android:name=".features.news.presentation.NewsActivity" />
         <activity
             android:name=".features.settings.presentation.SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
+            android:label="@string/title_activity_settings"/>
+        <activity android:name=".features.category.presentation.CategoryListActivity"/>
+        <receiver
+            android:name=".features.CancelWorkerReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.object173.newsfeed.cancel_worker" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

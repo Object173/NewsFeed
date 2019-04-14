@@ -1,5 +1,6 @@
 package com.object173.newsfeed.features.feed.presentation;
 
+import com.object173.newsfeed.features.feed.device.DownloadWorker;
 import com.object173.newsfeed.features.feed.domain.FeedInteractor;
 import com.object173.newsfeed.features.feed.domain.model.Feed;
 import com.object173.newsfeed.features.feed.domain.model.RequestResult;
@@ -33,7 +34,7 @@ class FeedViewModel extends ViewModel {
     }
 
     LiveData<RequestResult> loadFeed() {
-        return mLoadStatus = mFeedInteractor.loadFeed(mFeed.getValue());
+        return mLoadStatus = DownloadWorker.startLoadFeed(mFeed.getValue());
     }
 
     LiveData<RequestResult> updateFeed() {

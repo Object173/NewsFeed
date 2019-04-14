@@ -7,5 +7,6 @@ import androidx.paging.DataSource;
 
 public interface FeedInteractor {
     DataSource.Factory<Integer, Feed> getFeedDataSource();
+    DataSource.Factory<Integer, Feed> getFeedDataSource(String category);
     LiveData<Boolean> removeFeed(String feedLink);
 }

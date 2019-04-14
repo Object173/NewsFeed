@@ -1,14 +1,11 @@
 package com.object173.newsfeed.features.feed.data;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-
-import com.object173.newsfeed.R;
 import com.object173.newsfeed.db.AppDatabase;
 import com.object173.newsfeed.db.entities.FeedDB;
 import com.object173.newsfeed.db.entities.NewsDB;
 import com.object173.newsfeed.features.feed.domain.model.Feed;
 import com.object173.newsfeed.features.feed.domain.model.RequestResult;
+import com.object173.newsfeed.features.feed.domain.model.News;
 
 import java.util.Date;
 import java.util.List;
@@ -16,7 +13,6 @@ import java.util.List;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
-import androidx.preference.PreferenceManager;
 
 public class LocalDataSourceImpl implements LocalDataSource {
 
@@ -32,28 +28,35 @@ public class LocalDataSourceImpl implements LocalDataSource {
     }
 
     @Override
-    public boolean isExists(String feedLink) {
-        return mDatabase.feedDao().isExist(feedLink) > 0;
+    public boolean insertFeed(Feed feed) {
+        if(mDatabase.feedDao().isExist(feed.getLink()) > 0) {
+            return false;
+        }
+        return mDatabase.feedDao().insert(convertToFeedDB(feed)) > 0;
     }
 
     @Override
-    public void insertFeed(FeedDB feed) {
-        mDatabase.feedDao().insert(feed);
+    public void insertNews(List<News> newsList, int cacheSize, Date cropDate) {
+        for(News news : newsList) {
+            if(mDatabase.newsDao().isExist(news.getFeedLink(), news.getPubDate()) > 0) {
+                continue;
+            }
+            mDatabase.newsDao().insert(convertToNewsDB(news));
+        }
+
+        if(!newsList.isEmpty()) {
+            mDatabase.newsDao().cropDate(newsList.get(0).getFeedLink(), cropDate);
+            mDatabase.newsDao().cropCount(newsList.get(0).getFeedLink(), cacheSize);
+        }
     }
 
     @Override
-    public void insertNews(String feedLink, List<NewsDB> newsList, int cacheSize, Date cropDate) {
-        mDatabase.newsDao().insert(newsList);
-        mDatabase.newsDao().cropDate(feedLink, cropDate);
-        mDatabase.newsDao().cropCount(feedLink, cacheSize);
-    }
-
-    @Override
-    public LiveData<RequestResult> updateFeed(FeedDB feed) {
+    public LiveData<RequestResult> updateFeed(Feed feed) {
         final MutableLiveData<RequestResult> result = new MutableLiveData<>();
         new Thread(() -> {
             result.postValue(RequestResult.RUNNING);
-            if(mDatabase.feedDao().updateFeed(feed) > 0) {
+            FeedDB feedDB = convertToFeedDB(feed);
+            if(mDatabase.feedDao().updateFeed(feedDB) > 0) {
                 result.postValue(RequestResult.SUCCESS);
             }
             else {
@@ -63,23 +66,20 @@ public class LocalDataSourceImpl implements LocalDataSource {
         return result;
     }
 
-    @Override
-    public int getCacheSize(Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getInt(context.getString(R.string.pref_key_cache_size),
-                context.getResources().getInteger(R.integer.cache_size_default));
-    }
-
-    @Override
-    public int getCacheFrequency(Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getInt(context.getString(R.string.pref_key_cache_frequency),
-                context.getResources().getInteger(R.integer.cache_frequency_default));
-    }
-
     private static Feed convertToFeed(FeedDB feedDB) {
         return new Feed(feedDB.link, feedDB.title, feedDB.description, feedDB.sourceLink,
                 feedDB.updated, feedDB.iconLink, feedDB.author, feedDB.customName,
-                feedDB.isAutoRefresh, feedDB.isMainChannel);
+                feedDB.isAutoRefresh, feedDB.category);
+    }
+
+    private static FeedDB convertToFeedDB(Feed feed) {
+        return FeedDB.create(feed.getLink(), feed.getTitle(), feed.getDescription(), feed.getSourceLink(),
+                feed.getUpdated(), feed.getIconLink(), feed.getAuthor(), feed.getCustomName(),
+                feed.isAutoRefresh(), feed.getCategory());
+    }
+
+    private static NewsDB convertToNewsDB(final News news) {
+        return NewsDB.create(news.getId(), news.getFeedLink(), news.getTitle(), news.getDescription(),
+                news.getPubDate(), news.getSourceLink());
     }
 }

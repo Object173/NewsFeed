@@ -1,5 +1,6 @@
 package com.object173.newsfeed.features.newslist.presentation;
 
+import com.object173.newsfeed.features.newslist.device.UpdateFeedWorker;
 import com.object173.newsfeed.features.newslist.domain.NewsInteractor;
 import com.object173.newsfeed.features.newslist.domain.model.News;
 import com.object173.newsfeed.features.newslist.domain.model.RequestResult;
@@ -22,28 +23,52 @@ class NewsListViewModel extends ViewModel {
     private final NewsInteractor mNewsInteractor;
 
     private final String mFeedLink;
+    private String mCategory;
+
     private LiveData<PagedList<News>> mNewsData;
     private LiveData<RequestResult> mRequestResult;
 
     private final List<Long> mReviewedNews = new LinkedList<>();
 
-    NewsListViewModel(final NewsInteractor newsInteractor, final String feedLink) {
+    NewsListViewModel(final NewsInteractor newsInteractor, final String feedLink, final String category) {
         mNewsInteractor = newsInteractor;
         mFeedLink = feedLink;
+        mCategory = category;
 
+        if(mFeedLink != null) {
+            mNewsData = loadNews(mNewsInteractor.getNewsByFeed(mFeedLink));
+        }
+        else {
+            if(mCategory != null) {
+                mNewsData = loadNews(mNewsInteractor.getNewsByCategory(mCategory));
+            }
+            else {
+                mNewsData = loadNews(mNewsInteractor.getAllNews());
+            }
+        }
+    }
+
+    private LiveData<PagedList<News>> loadNews (DataSource.Factory<Integer, News> factory) {
         final PagedList.Config config = new PagedList.Config.Builder()
                 .setEnablePlaceholders(false)
                 .setPageSize(LOAD_BLOCK_SIZE)
                 .setPrefetchDistance(PREFETCH_DISTANCE)
                 .build();
 
-        final DataSource.Factory<Integer, News> dataSourceFactory = (mFeedLink == null) ?
-                mNewsInteractor.getNewsDataSource() : mNewsInteractor.getNewsDataSource(mFeedLink);
-
-        mNewsData = new LivePagedListBuilder<>(
-                dataSourceFactory, config)
+        return new LivePagedListBuilder<>(
+                factory, config)
                 .setFetchExecutor(Executors.newSingleThreadExecutor())
                 .build();
+    }
+
+    LiveData<PagedList<News>> setCategory(String category) {
+        mCategory = category;
+        if(mCategory != null) {
+            return loadNews(mNewsInteractor.getNewsByCategory(mCategory));
+        }
+        else {
+            return loadNews(mNewsInteractor.getAllNews());
+        }
     }
 
     LiveData<PagedList<News>> getNewsData() {
@@ -51,7 +76,12 @@ class NewsListViewModel extends ViewModel {
     }
 
     LiveData<RequestResult> updateFeed() {
-        mRequestResult = mNewsInteractor.updateFeed(mFeedLink);
+        if(mFeedLink != null) {
+            mRequestResult = UpdateFeedWorker.startByFeed(mFeedLink);
+        }
+        else {
+            mRequestResult = UpdateFeedWorker.startByCategory(mCategory);
+        }
         return mRequestResult;
     }
 

@@ -14,7 +14,8 @@ public class Feed {
     private String customName;
     private boolean isCustomName;
     private boolean isAutoRefresh;
-    private boolean isMainChannel;
+
+    private String category;
 
     public Feed() {
         this.link = null;
@@ -25,11 +26,10 @@ public class Feed {
         this.iconLink = null;
         this.author = null;
         this.isAutoRefresh = true;
-        this.isMainChannel = true;
     }
 
     public Feed(String link, String title, String description, String sourceLink, Date updated,
-                String iconLink, String author, String customName, boolean isAutoRefresh, boolean isMainChannel) {
+                String iconLink, String author, String customName, boolean isAutoRefresh, String category) {
         this.link = link;
         this.title = title;
         this.description = description;
@@ -39,8 +39,8 @@ public class Feed {
         this.author = author;
         this.customName = customName;
         this.isAutoRefresh = isAutoRefresh;
-        this.isMainChannel = isMainChannel;
         this.isCustomName = customName != null;
+        this.category = category;
     }
 
     public String getLink() {
@@ -87,10 +87,6 @@ public class Feed {
         return isAutoRefresh;
     }
 
-    public boolean isMainChannel() {
-        return isMainChannel;
-    }
-
     public void setCustomName(String customName) {
         this.customName = customName;
     }
@@ -103,7 +99,11 @@ public class Feed {
         isAutoRefresh = autoRefresh;
     }
 
-    public void setMainChannel(boolean mainChannel) {
-        isMainChannel = mainChannel;
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

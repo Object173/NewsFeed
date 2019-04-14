@@ -18,11 +18,25 @@ public class NewsListViewModelFactory extends ViewModelProvider.AndroidViewModel
 
     private final Application mApplication;
     private final String mFeedLink;
+    private final String mCategory;
 
-    NewsListViewModelFactory(@NonNull Application application, String feedLink) {
+    NewsListViewModelFactory(@NonNull Application application, String feedLink, String category) {
         super(application);
         mApplication = application;
         mFeedLink = feedLink;
+        mCategory = category;
+    }
+
+    static NewsListViewModelFactory getByAll(@NonNull Application application) {
+        return new NewsListViewModelFactory(application, null, null);
+    }
+
+    static NewsListViewModelFactory getByFeed(@NonNull Application application, String feedLink) {
+        return new NewsListViewModelFactory(application, feedLink, null);
+    }
+
+    static NewsListViewModelFactory getByCategory(@NonNull Application application, String category) {
+        return new NewsListViewModelFactory(application, null, category);
     }
 
     @NonNull
@@ -35,7 +49,7 @@ public class NewsListViewModelFactory extends ViewModelProvider.AndroidViewModel
             final NewsRepository repository = new NewsRepositoryImpl(dataSource);
             final NewsInteractor newsInteractor = new NewsInteractorImpl(repository);
 
-            return (T) new NewsListViewModel(newsInteractor, mFeedLink);
+            return (T) new NewsListViewModel(newsInteractor, mFeedLink, mCategory);
         }
         return super.create(modelClass);
     }

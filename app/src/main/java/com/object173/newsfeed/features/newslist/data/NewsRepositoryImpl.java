@@ -1,17 +1,16 @@
 package com.object173.newsfeed.features.newslist.data;
 
+import com.object173.newsfeed.db.entities.NewsDB;
 import com.object173.newsfeed.features.newslist.domain.NewsRepository;
 import com.object173.newsfeed.features.newslist.domain.model.News;
-import com.object173.newsfeed.features.newslist.domain.model.RequestResult;
 
-import java.util.UUID;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
 import androidx.paging.DataSource;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 
 public class NewsRepositoryImpl implements NewsRepository {
 
@@ -22,26 +21,18 @@ public class NewsRepositoryImpl implements NewsRepository {
     }
 
     @Override
-    public DataSource.Factory<Integer, News> getLocalDataSource() {
+    public DataSource.Factory<Integer, News> getAllNews() {
         return mLocalDataSource.getNewsDataSource();
     }
 
     @Override
-    public DataSource.Factory<Integer, News> getNewsDataSource(String feedLink) {
-        return mLocalDataSource.getNewsDataSource(feedLink);
+    public DataSource.Factory<Integer, News> getNewsByFeed(String feedLink) {
+        return mLocalDataSource.getNewsByFeed(feedLink);
     }
 
     @Override
-    public LiveData<RequestResult> updateFeed(String feedLink) {
-        final WorkRequest request = UpdateFeedWorker.getUpdateNow(feedLink);
-        final UUID requestId = request.getId();
-
-        final LiveData<RequestResult> result = Transformations.map(WorkManager.getInstance()
-                .getWorkInfoByIdLiveData(requestId), UpdateFeedWorker::getResult);
-
-        WorkManager.getInstance().enqueue(request);
-
-        return result;
+    public DataSource.Factory<Integer, News> getNewsByCategory(String category) {
+        return mLocalDataSource.getNewsByCategory(category);
     }
 
     @Override
@@ -56,5 +47,29 @@ public class NewsRepositoryImpl implements NewsRepository {
     @Override
     public void checkReviewed(long id) {
         new Thread(() -> mLocalDataSource.checkReviewed(id)).start();
+    }
+
+    @Override
+    public void setFeedUpdated(String feedLink, Date updated) {
+        mLocalDataSource.setFeedUpdated(feedLink, updated);
+    }
+
+    @Override
+    public int refreshNews(List<News> newsList, int cacheSize, Date cropDate) {
+        List<NewsDB> insertedNews = new LinkedList<>();
+        for(News news : newsList) {
+            insertedNews.add(convertToNewsDB(news));
+        }
+        return mLocalDataSource.refreshNews(insertedNews, cacheSize, cropDate);
+    }
+
+    @Override
+    public List<String> getFeedsById(String category) {
+        return mLocalDataSource.getFeedsByCategory(category);
+    }
+
+    private static NewsDB convertToNewsDB(final News news) {
+        return NewsDB.create(news.getId(), news.getFeedLink(), news.getTitle(), news.getDescription(),
+                news.getPubDate(), news.getSourceLink());
     }
 }

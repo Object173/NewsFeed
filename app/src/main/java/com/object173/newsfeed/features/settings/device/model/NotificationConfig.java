@@ -1,4 +1,4 @@
-package com.object173.newsfeed.features.settings.domain.model;
+package com.object173.newsfeed.features.settings.device.model;
 
 public class NotificationConfig {
 

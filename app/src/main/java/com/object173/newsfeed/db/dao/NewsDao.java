@@ -11,6 +11,7 @@ import androidx.paging.DataSource;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.TypeConverters;
 
 @Dao
@@ -20,7 +21,11 @@ public interface NewsDao {
     LiveData<NewsDB> get(Long id);
 
     @Query("SELECT * FROM newsdb ORDER BY pubDate DESC")
-    LiveData<List<NewsDB>> getAll();
+    DataSource.Factory<Integer, NewsDB> getAll();
+
+    @Transaction
+    @Query("SELECT * FROM newsdb WHERE feedLink IN (SELECT FeedDB.link FROM feeddb WHERE category=:category) ORDER BY pubDate DESC")
+    DataSource.Factory<Integer, NewsDB> getByCategory(String category);
 
     @Query("SELECT * FROM newsdb WHERE feedLink=:feedLink ORDER BY pubDate DESC")
     NewsDB getLast(String feedLink);
@@ -57,4 +62,7 @@ public interface NewsDao {
 
     @Insert
     long[] insert(List<NewsDB> news);
+
+    @Insert
+    long insert(NewsDB news);
 }

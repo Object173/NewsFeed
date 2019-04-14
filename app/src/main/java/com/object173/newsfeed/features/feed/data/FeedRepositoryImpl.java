@@ -4,13 +4,12 @@ import com.object173.newsfeed.db.entities.FeedDB;
 import com.object173.newsfeed.features.feed.domain.FeedRepository;
 import com.object173.newsfeed.features.feed.domain.model.Feed;
 import com.object173.newsfeed.features.feed.domain.model.RequestResult;
+import com.object173.newsfeed.features.feed.domain.model.News;
 
-import java.util.UUID;
+import java.util.Date;
+import java.util.List;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Transformations;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 
 public class FeedRepositoryImpl implements FeedRepository {
 
@@ -26,27 +25,17 @@ public class FeedRepositoryImpl implements FeedRepository {
     }
 
     @Override
-    public LiveData<RequestResult> loadFeed(final Feed feed) {
-        final WorkRequest request = DownloadWorker.getRequest(feed.getLink(), feed.getCustomName(),
-                feed.isAutoRefresh(), feed.isMainChannel());
-        final UUID requestId = request.getId();
-
-        final LiveData<RequestResult> result = Transformations.map(WorkManager.getInstance()
-                .getWorkInfoByIdLiveData(requestId), DownloadWorker::getResult);
-
-        WorkManager.getInstance().enqueue(request);
-
-        return result;
+    public LiveData<RequestResult> updateFeed(Feed feed) {
+        return mLocalDataSource.updateFeed(feed);
     }
 
     @Override
-    public LiveData<RequestResult> updateFeed(Feed feed) {
-        return mLocalDataSource.updateFeed(convertFeed(feed));
+    public boolean insertFeed(Feed feed) {
+        return mLocalDataSource.insertFeed(feed);
     }
 
-    private static FeedDB convertFeed(Feed feed) {
-        return FeedDB.create(feed.getLink(), feed.getTitle(), feed.getDescription(), feed.getSourceLink(),
-                feed.getUpdated(), feed.getIconLink(), feed.getAuthor(), feed.isCustomName() ? feed.getCustomName() : null,
-                feed.isAutoRefresh(), feed.isMainChannel());
+    @Override
+    public void insertNews(List<News> newsList, int cacheSize, Date cropDate) {
+        mLocalDataSource.insertNews(newsList, cacheSize, cropDate);
     }
 }

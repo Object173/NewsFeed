@@ -18,6 +18,6 @@ public class NewsListActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        return NewsListFragment.newInstance(getIntent().getExtras().getString(KEY_FEED_LINK));
+        return NewsListFragment.newInstanceByFeed(getIntent().getExtras().getString(KEY_FEED_LINK));
     }
 }

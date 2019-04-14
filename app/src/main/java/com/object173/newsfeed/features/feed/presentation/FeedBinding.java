@@ -1,4 +1,7 @@
 package com.object173.newsfeed.features.feed.presentation;
+import android.view.View;
+
+import com.object173.newsfeed.features.category.presentation.CategoryListActivity;
 import com.object173.newsfeed.features.feed.domain.model.Feed;
 
 import androidx.databinding.BaseObservable;
@@ -55,15 +58,16 @@ public class FeedBinding extends BaseObservable {
         mFeed.setAutoRefresh(autoRefresh);
     }
 
-    public boolean getIsMainChannel() {
-        return mFeed.isMainChannel();
-    }
-
-    public void setIsMainChannel(boolean mainChannel) {
-        mFeed.setMainChannel(mainChannel);
-    }
-
     public boolean isNewFeed() {
         return mIsNewFeed;
+    }
+
+    public String getCategory() {
+        return mFeed.getCategory();
+    }
+
+    public void setCategory(String category) {
+        mFeed.setCategory(category);
+        notifyChange();
     }
 }

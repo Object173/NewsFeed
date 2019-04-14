@@ -19,6 +19,10 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
         return R.layout.activity_fragment;
     }
 
+    protected Fragment getFragment() {
+        return getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

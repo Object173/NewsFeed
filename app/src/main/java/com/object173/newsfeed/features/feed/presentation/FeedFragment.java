@@ -1,5 +1,7 @@
 package com.object173.newsfeed.features.feed.presentation;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,6 +13,7 @@ import android.view.ViewGroup;
 import com.google.android.material.snackbar.Snackbar;
 import com.object173.newsfeed.R;
 import com.object173.newsfeed.databinding.FragmentFeedBinding;
+import com.object173.newsfeed.features.category.presentation.CategoryListActivity;
 import com.object173.newsfeed.features.feed.domain.model.RequestResult;
 
 import androidx.annotation.NonNull;
@@ -25,6 +28,7 @@ public class FeedFragment extends Fragment {
     private FragmentFeedBinding mBinding;
 
     private static final String ATTR_FEED_LINK = "feed_link";
+    private static final int SELECT_CATEGORY_REQUEST_CODE = 173;
 
     private boolean mIsNewFeed;
 
@@ -61,6 +65,10 @@ public class FeedFragment extends Fragment {
         if(mViewModel.getIsRefreshed() != null) {
             mViewModel.getIsRefreshed().observe(this, this::setLoadingStatus);
         }
+
+        mBinding.categoryButton.setOnClickListener(view -> {
+            startActivityForResult(CategoryListActivity.getIntent(getActivity()), SELECT_CATEGORY_REQUEST_CODE);
+        });
 
         return mBinding.getRoot();
     }
@@ -99,6 +107,18 @@ public class FeedFragment extends Fragment {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if(requestCode == SELECT_CATEGORY_REQUEST_CODE) {
+            if(resultCode == Activity.RESULT_OK) {
+                mBinding.getFeed().setCategory(CategoryListActivity.getCategory(data));
+            }
+        }
+        else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 }

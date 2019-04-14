@@ -15,7 +15,12 @@ public class FeedInteractorImpl implements FeedInteractor {
 
     @Override
     public DataSource.Factory<Integer, Feed> getFeedDataSource() {
-        return mFeedRepository.getFeedDataSource();
+        return mFeedRepository.getLocalDataSource();
+    }
+
+    @Override
+    public DataSource.Factory<Integer, Feed> getFeedDataSource(String category) {
+        return mFeedRepository.getFeedDataSource(category);
     }
 
     @Override

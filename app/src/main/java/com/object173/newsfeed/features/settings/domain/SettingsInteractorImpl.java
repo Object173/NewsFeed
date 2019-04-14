@@ -1,7 +1,10 @@
 package com.object173.newsfeed.features.settings.domain;
 
-import com.object173.newsfeed.features.settings.domain.model.AutoUpdateConfig;
-import com.object173.newsfeed.features.settings.domain.model.NotificationConfig;
+import com.object173.newsfeed.features.settings.domain.model.Feed;
+import com.object173.newsfeed.features.settings.domain.model.News;
+
+import java.util.Date;
+import java.util.List;
 
 public class SettingsInteractorImpl implements SettingsInteractor {
 
@@ -11,13 +14,24 @@ public class SettingsInteractorImpl implements SettingsInteractor {
         mRepository = repository;
     }
 
+
     @Override
-    public void setAutoUpdateConfig(boolean isEnabled, int frequency, boolean isWifiOnly) {
-        mRepository.setAutoUpdateConfig(new AutoUpdateConfig(isEnabled, frequency, isWifiOnly));
+    public List<Feed> getAutoUpdatedFeeds() {
+        return mRepository.getAutoUpdatedFeeds();
     }
 
     @Override
-    public void setNotificationConfig(boolean isEnabled, int type) {
-        mRepository.setNotificationConfig(new NotificationConfig(isEnabled, NotificationConfig.Type.values()[type]));
+    public void setUpdatedFail(String feedLink) {
+        mRepository.setFeedUpdated(feedLink, null);
+    }
+
+    @Override
+    public void setUpdatedFeed(String feed, Date date) {
+        mRepository.setFeedUpdated(feed, date);
+    }
+
+    @Override
+    public int refreshNews(List<News> newsList, int cacheSize, Date cropDate) {
+        return mRepository.refreshNews(newsList, cacheSize, cropDate);
     }
 }

@@ -24,12 +24,30 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 public class FeedListFragment extends Fragment {
 
-    private FeedListViewModel mViewModel;
+    private static final String KEY_CATEGORY = "category";
+
+    private FeedListFragmentViewModel mViewModel;
     private FragmentListBinding mBinding;
     private FeedPagedAdapter mPagedAdapter;
 
-    public static FeedListFragment newInstance() {
-        return new FeedListFragment();
+    public static FeedListFragment newInstance(String category) {
+        FeedListFragment fragment = new FeedListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(KEY_CATEGORY, category);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    public void setCategory(String category) {
+        if(mPagedAdapter.getCurrentList() != null) {
+            mPagedAdapter.submitList(null);
+        }
+        if(category != null) {
+            mViewModel.getFeedData(category).observe(this, feedList -> mPagedAdapter.submitList(feedList));
+        }
+        else {
+            mViewModel.getFeedData().observe(this, feedList -> mPagedAdapter.submitList(feedList));
+        }
     }
 
     @Override
@@ -37,7 +55,7 @@ public class FeedListFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         mViewModel = ViewModelProviders.of(this, new FeedListViewModelFactory
-                (getActivity().getApplication())).get(FeedListViewModel.class);
+                (getActivity().getApplication())).get(FeedListFragmentViewModel.class);
 
         mPagedAdapter = new FeedPagedAdapter(new FeedPagedAdapter.OnFeedClickListener() {
             @Override
@@ -71,9 +89,9 @@ public class FeedListFragment extends Fragment {
 
         mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mBinding.recyclerView.setAdapter(mPagedAdapter);
-        mViewModel.getFeedData().observe(this, feedList -> {
-            mPagedAdapter.submitList(feedList);
-        });
+
+        String category = getArguments().getString(KEY_CATEGORY);
+        setCategory(category);
 
         final ItemTouchHelper.Callback callback = new ItemTouchHelperCallback(this::removeFeed);
         final ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
