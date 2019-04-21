@@ -1,8 +1,9 @@
 package com.object173.newsfeed.features.news.domain;
 
-import com.object173.newsfeed.features.news.domain.model.News;
-
 import androidx.lifecycle.LiveData;
+
+import com.object173.newsfeed.features.base.domain.NewsRepository;
+import com.object173.newsfeed.features.base.domain.model.local.News;
 
 public class NewsInteractorImpl implements NewsInteractor {
 

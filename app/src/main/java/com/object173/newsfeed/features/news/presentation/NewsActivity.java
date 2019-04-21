@@ -3,7 +3,7 @@ package com.object173.newsfeed.features.news.presentation;
 import android.content.Context;
 import android.content.Intent;
 
-import com.object173.newsfeed.features.SingleFragmentActivity;
+import com.object173.newsfeed.features.base.presentation.SingleFragmentActivity;
 
 import androidx.fragment.app.Fragment;
 

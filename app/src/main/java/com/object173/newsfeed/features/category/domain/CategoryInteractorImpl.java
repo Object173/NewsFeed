@@ -1,7 +1,9 @@
 package com.object173.newsfeed.features.category.domain;
 
-import com.object173.newsfeed.features.category.domain.model.Category;
+import com.object173.newsfeed.features.base.domain.CategoryRepository;
+import com.object173.newsfeed.features.base.domain.model.local.Category;
 
+import androidx.lifecycle.LiveData;
 import androidx.paging.DataSource;
 
 public class CategoryInteractorImpl implements CategoryInteractor {
@@ -11,7 +13,6 @@ public class CategoryInteractorImpl implements CategoryInteractor {
     public CategoryInteractorImpl(CategoryRepository categoryRepository) {
         mCategoryRepository = categoryRepository;
     }
-
 
     @Override
     public DataSource.Factory<Integer, Category> getCategoryDataSource() {
@@ -24,7 +25,7 @@ public class CategoryInteractorImpl implements CategoryInteractor {
     }
 
     @Override
-    public void removeCategory(Category category) {
-        mCategoryRepository.removeFeed(category);
+    public LiveData<Boolean> removeCategory(Category category) {
+        return mCategoryRepository.removeCategory(category);
     }
 }

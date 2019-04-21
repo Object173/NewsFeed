@@ -62,4 +62,8 @@
 
     <string name="non_category_title">None category</string>
     <string name="category">category</string>
+    <string name="list_is_empty">List is empty</string>
+
+    <string name="tab_feed_title">Feeds</string>
+    <string name="tab_news_title">News</string>
 </resources>

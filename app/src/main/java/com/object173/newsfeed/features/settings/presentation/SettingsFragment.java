@@ -15,7 +15,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(SettingsViewModel.class);
+        mViewModel = ViewModelProviders.of(this, new SettingsViewModelFactory(getActivity().getApplication()))
+                .get(SettingsViewModel.class);
     }
 
     @Override

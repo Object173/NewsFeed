@@ -11,33 +11,39 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.object173.newsfeed.R;
-import com.object173.newsfeed.databinding.FragmentListBinding;
-import com.object173.newsfeed.features.ItemTouchHelperCallback;
-import com.object173.newsfeed.features.category.domain.model.Category;
-import com.object173.newsfeed.features.settings.device.AutoUpdateWorker;
-import com.object173.newsfeed.features.settings.device.model.AutoUpdateConfig;
-import com.object173.newsfeed.libs.log.LoggerFactory;
+import com.object173.newsfeed.features.base.domain.model.local.Category;
+import com.object173.newsfeed.features.base.presentation.BaseListFragment;
+import com.object173.newsfeed.features.base.presentation.BaseListFragmentViewModel;
+import com.object173.newsfeed.features.base.presentation.ItemTouchHelperCallback;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-public class CategoryListFragment extends Fragment {
+public class CategoryListFragment extends BaseListFragment<Category, CategoryPagedAdapter.CategoryViewHolder> {
 
-    private CategoryListViewModel mViewModel;
-    private FragmentListBinding mBinding;
-    private CategoryPagedAdapter mPagedAdapter;
-
-    private static final String EXTRA_CATEGORY = "category_title";
+    private static final String EXTRA_CATEGORY = "category";
 
     public static CategoryListFragment newInstance() {
         return new CategoryListFragment();
+    }
+
+    @Override
+    protected BaseListFragmentViewModel<Category> getViewModel() {
+        return ViewModelProviders.of(this, new CategoryListViewModelFactory(getActivity().getApplication()))
+                .get(CategoryListViewModel.class);
+    }
+
+    @Override
+    protected PagedListAdapter<Category, CategoryPagedAdapter.CategoryViewHolder> getPagedAdapter() {
+        return new CategoryPagedAdapter(this::returnResult);
     }
 
     @Override
@@ -45,36 +51,6 @@ public class CategoryListFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         setupActionBar();
-
-        mViewModel = ViewModelProviders.of(this, new CategoryListViewModelFactory
-                (getActivity().getApplication())).get(CategoryListViewModel.class);
-
-        mPagedAdapter = new CategoryPagedAdapter(this::returnResult);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mPagedAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public View onCreateView(@NonNull final LayoutInflater inflater,
-                             @Nullable final ViewGroup container,
-                             @Nullable final Bundle savedInstanceState) {
-        mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false);
-
-        mBinding.swipeRefreshLayout.setEnabled(false);
-
-        mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mBinding.recyclerView.setAdapter(mPagedAdapter);
-        mViewModel.getFeedData().observe(this, feedList -> mPagedAdapter.submitList(feedList));
-
-        final ItemTouchHelper.Callback callback = new ItemTouchHelperCallback(position ->  mViewModel.removeFeed(position));
-        final ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-        touchHelper.attachToRecyclerView(mBinding.recyclerView);
-
-        return mBinding.getRoot();
     }
 
     public static String getCategory(Intent intent) {
@@ -123,7 +99,7 @@ public class CategoryListFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(requestCode == AddCategoryDialog.REQUEST_CODE) {
             if(resultCode == Activity.RESULT_OK) {
-                mViewModel.addCategory(new Category(AddCategoryDialog.getCategoryTitle(data)));
+                mViewModel.addData(new Category(AddCategoryDialog.getCategoryTitle(data)));
             }
         }
         else {

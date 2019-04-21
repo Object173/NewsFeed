@@ -1,47 +1,37 @@
 package com.object173.newsfeed.features.category.presentation;
 
+import com.object173.newsfeed.features.base.domain.model.local.Category;
+import com.object173.newsfeed.features.base.presentation.BaseListFragmentViewModel;
 import com.object173.newsfeed.features.category.domain.CategoryInteractor;
-import com.object173.newsfeed.features.category.domain.model.Category;
-
-import java.util.concurrent.Executors;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModel;
-import androidx.paging.LivePagedListBuilder;
-import androidx.paging.PagedList;
+import androidx.paging.DataSource;
 
-class CategoryListViewModel extends ViewModel {
-
-    private static final int LOAD_BLOCK_SIZE = 10;
-    private static final int PREFETCH_DISTANCE = 5;
+public class CategoryListViewModel extends BaseListFragmentViewModel<Category> {
 
     private final CategoryInteractor mInteractor;
-    private LiveData<PagedList<Category>> mCategoryData;
 
     CategoryListViewModel(final CategoryInteractor interactor) {
         mInteractor = interactor;
-
-        final PagedList.Config config = new PagedList.Config.Builder()
-                .setEnablePlaceholders(false)
-                .setPageSize(LOAD_BLOCK_SIZE)
-                .setPrefetchDistance(PREFETCH_DISTANCE)
-                .build();
-
-        mCategoryData = new LivePagedListBuilder<>(
-                interactor.getCategoryDataSource(), config)
-                .setFetchExecutor(Executors.newSingleThreadExecutor())
-                .build();
     }
 
-    LiveData<PagedList<Category>> getFeedData() {
-        return mCategoryData;
+    @Override
+    protected DataSource.Factory<Integer, Category> loadFactoryData(String param) {
+        return mInteractor.getCategoryDataSource();
     }
 
-    void removeFeed(final int position) {
-        mInteractor.removeCategory(mCategoryData.getValue().get(position));
+    @Override
+    protected DataSource.Factory<Integer, Category> loadFactoryData() {
+        return mInteractor.getCategoryDataSource();
     }
 
-    void addCategory(final Category category) {
-        mInteractor.addCategory(category);
+    @Override
+    protected LiveData<Boolean> removeData(Category category) {
+        return mInteractor.removeCategory(category);
+    }
+
+    @Override
+    public void addData(Category obj) {
+        mInteractor.addCategory(obj);
     }
 }

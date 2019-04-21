@@ -20,7 +20,7 @@ public interface CategoryDao {
     void insertAll(CategoryDB... categories);
 
     @Delete
-    void remove(CategoryDB category);
+    int remove(CategoryDB category);
 
     @Query("SELECT * FROM categorydb ORDER BY title")
     DataSource.Factory<Integer, CategoryDB> getAll();

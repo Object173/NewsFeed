@@ -4,7 +4,7 @@
     <data>
         <variable
             name="category"
-            type="com.object173.newsfeed.features.category.domain.model.Category"/>
+            type="com.object173.newsfeed.features.base.domain.model.local.Category"/>
     </data>
 
     <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"

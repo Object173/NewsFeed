@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.net.Uri;
 
 import com.object173.newsfeed.R;
+import com.object173.newsfeed.features.base.domain.model.local.News;
 import com.object173.newsfeed.features.news.domain.NewsInteractor;
-import com.object173.newsfeed.features.news.domain.model.News;
 
 import androidx.core.app.ShareCompat;
 import androidx.lifecycle.LiveData;

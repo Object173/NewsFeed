@@ -29,7 +29,11 @@ public interface FeedDao {
 
     @Transaction
     @Query("SELECT * FROM feeddb WHERE link = :feedLink ORDER BY updated DESC")
-    LiveData<FeedDB> getById(String feedLink);
+    LiveData<FeedDB> getByIdAsync(String feedLink);
+
+    @Transaction
+    @Query("SELECT * FROM feeddb WHERE link = :feedLink ORDER BY updated DESC")
+    FeedDB getById(String feedLink);
 
     @Transaction
     @Query("SELECT COUNT(*) FROM feeddb WHERE link=:feedLink")
@@ -45,8 +49,8 @@ public interface FeedDao {
     DataSource.Factory<Integer, FeedDB.FeedWithReviewed> getFeedList();
 
     @Transaction
-    @Query("SELECT * FROM feeddb WHERE isAutoRefresh ORDER BY updated")
-    List<FeedDB> getAutoUpdated();
+    @Query("SELECT feeddb.link FROM feeddb WHERE isAutoRefresh ORDER BY updated")
+    List<String> getAutoUpdatedList();
 
     @Transaction
     @Query("SELECT feeddb.link FROM feeddb WHERE category=:category ORDER BY updated")

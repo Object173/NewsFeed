@@ -5,7 +5,7 @@ import android.view.ViewGroup;
 
 import com.object173.newsfeed.R;
 import com.object173.newsfeed.databinding.ItemFeedListBinding;
-import com.object173.newsfeed.features.feedlist.domain.model.Feed;
+import com.object173.newsfeed.features.base.domain.model.local.Feed;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -38,10 +38,11 @@ public class FeedPagedAdapter extends PagedListAdapter<Feed, FeedPagedAdapter.Fe
 
     @Override
     public void onBindViewHolder(@NonNull final FeedViewHolder feedViewHolder, final int position) {
-        feedViewHolder.bindFeed(getItem(position));
+        Feed feed = getItem(position);
+        feedViewHolder.bindFeed(feed);
 
-        feedViewHolder.itemView.setOnClickListener(view -> mFeedClickListener.onClick(getItem(position)));
-        feedViewHolder.itemView.setOnLongClickListener(view -> mFeedClickListener.onLongClick(getItem(position)));
+        feedViewHolder.itemView.setOnClickListener(view -> mFeedClickListener.onClick(feed));
+        feedViewHolder.itemView.setOnLongClickListener(view -> mFeedClickListener.onLongClick(feed));
     }
 
     static class FeedViewHolder extends RecyclerView.ViewHolder {

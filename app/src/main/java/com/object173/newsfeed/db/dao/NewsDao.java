@@ -27,9 +27,6 @@ public interface NewsDao {
     @Query("SELECT * FROM newsdb WHERE feedLink IN (SELECT FeedDB.link FROM feeddb WHERE category=:category) ORDER BY pubDate DESC")
     DataSource.Factory<Integer, NewsDB> getByCategory(String category);
 
-    @Query("SELECT * FROM newsdb WHERE feedLink=:feedLink ORDER BY pubDate DESC")
-    NewsDB getLast(String feedLink);
-
     @Query("SELECT * FROM newsdb WHERE not isHidden ORDER BY pubDate DESC")
     DataSource.Factory<Integer, NewsDB> getAllDataSource();
 
@@ -53,15 +50,9 @@ public interface NewsDao {
     @Query("DELETE FROM newsdb WHERE feedLink = :feedLink and pubDate<:date")
     void cropDate(String feedLink, Date date);
 
-    @Query("DELETE FROM newsdb WHERE feedLink = :feedLink")
-    void clear(String feedLink);
-
     @TypeConverters({DateConverter.class})
     @Query("SELECT * FROM newsdb WHERE feedLink=:feedLink AND pubDate=:pubDate")
     int isExist(String feedLink, Date pubDate);
-
-    @Insert
-    long[] insert(List<NewsDB> news);
 
     @Insert
     long insert(NewsDB news);

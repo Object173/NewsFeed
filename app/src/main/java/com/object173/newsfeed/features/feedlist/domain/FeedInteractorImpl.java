@@ -1,6 +1,8 @@
 package com.object173.newsfeed.features.feedlist.domain;
 
-import com.object173.newsfeed.features.feedlist.domain.model.Feed;
+import com.object173.newsfeed.features.base.domain.CategoryRepository;
+import com.object173.newsfeed.features.base.domain.FeedRepository;
+import com.object173.newsfeed.features.base.domain.model.local.Feed;
 
 import androidx.lifecycle.LiveData;
 import androidx.paging.DataSource;

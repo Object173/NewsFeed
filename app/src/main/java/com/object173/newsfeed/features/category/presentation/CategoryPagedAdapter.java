@@ -5,7 +5,7 @@ import android.view.ViewGroup;
 
 import com.object173.newsfeed.R;
 import com.object173.newsfeed.databinding.ItemCategoryListBinding;
-import com.object173.newsfeed.features.category.domain.model.Category;
+import com.object173.newsfeed.features.base.domain.model.local.Category;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;

@@ -1,6 +1,6 @@
 package com.object173.newsfeed.features.news.domain;
 
-import com.object173.newsfeed.features.news.domain.model.News;
+import com.object173.newsfeed.features.base.domain.model.local.News;
 
 import androidx.lifecycle.LiveData;
 

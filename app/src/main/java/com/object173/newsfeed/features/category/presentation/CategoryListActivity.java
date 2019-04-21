@@ -2,13 +2,9 @@ package com.object173.newsfeed.features.category.presentation;
 
 import android.content.Context;
 import android.content.Intent;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.object173.newsfeed.R;
-import com.object173.newsfeed.features.SingleFragmentActivity;
-import com.object173.newsfeed.features.feed.presentation.FeedActivity;
-import com.object173.newsfeed.features.settings.presentation.SettingsActivity;
+import com.object173.newsfeed.features.base.presentation.SingleFragmentActivity;
 
 import androidx.fragment.app.Fragment;
 
