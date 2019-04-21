@@ -3,29 +3,21 @@ package com.object173.newsfeed.features.category.presentation;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.object173.newsfeed.R;
-import com.object173.newsfeed.features.base.domain.model.local.Category;
+import com.object173.newsfeed.features.base.model.local.Category;
 import com.object173.newsfeed.features.base.presentation.BaseListFragment;
 import com.object173.newsfeed.features.base.presentation.BaseListFragmentViewModel;
-import com.object173.newsfeed.features.base.presentation.ItemTouchHelperCallback;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.paging.PagedListAdapter;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class CategoryListFragment extends BaseListFragment<Category, CategoryPagedAdapter.CategoryViewHolder> {
 

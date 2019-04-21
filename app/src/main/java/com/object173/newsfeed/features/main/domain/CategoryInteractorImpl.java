@@ -4,8 +4,8 @@ import java.util.List;
 
 import androidx.lifecycle.LiveData;
 
-import com.object173.newsfeed.features.base.domain.CategoryRepository;
-import com.object173.newsfeed.features.base.domain.model.local.Category;
+import com.object173.newsfeed.features.category.domain.CategoryRepository;
+import com.object173.newsfeed.features.base.model.local.Category;
 
 public class CategoryInteractorImpl implements CategoryInteractor {
 

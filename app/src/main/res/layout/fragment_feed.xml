@@ -5,7 +5,7 @@
         <import type="android.view.View"/>
         <variable
             name="feed"
-            type="com.object173.newsfeed.features.feed.presentation.FeedBinding"/>
+            type="com.object173.newsfeed.features.feed.item.presentation.FeedBinding"/>
     </data>
 
     <FrameLayout

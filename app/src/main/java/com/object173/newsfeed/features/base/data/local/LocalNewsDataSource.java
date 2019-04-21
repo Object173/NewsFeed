@@ -7,7 +7,7 @@ import java.util.List;
 import androidx.lifecycle.LiveData;
 import androidx.paging.DataSource;
 
-import com.object173.newsfeed.features.base.domain.model.local.News;
+import com.object173.newsfeed.features.base.model.local.News;
 
 public interface LocalNewsDataSource {
     LiveData<News> getNews(Long id);

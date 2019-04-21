@@ -1,6 +1,6 @@
 package com.object173.newsfeed.features.category.presentation;
 
-import com.object173.newsfeed.features.base.domain.model.local.Category;
+import com.object173.newsfeed.features.base.model.local.Category;
 import com.object173.newsfeed.features.base.presentation.BaseListFragmentViewModel;
 import com.object173.newsfeed.features.category.domain.CategoryInteractor;
 

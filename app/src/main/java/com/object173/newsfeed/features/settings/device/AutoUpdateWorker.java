@@ -1,23 +1,25 @@
 package com.object173.newsfeed.features.settings.device;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Pair;
 
 import com.object173.newsfeed.App;
-import com.object173.newsfeed.features.base.domain.FeedRepository;
-import com.object173.newsfeed.features.base.domain.model.local.News;
-import com.object173.newsfeed.features.base.domain.model.network.RequestResult;
-import com.object173.newsfeed.features.base.domain.model.pref.AutoUpdateConfig;
-import com.object173.newsfeed.features.base.domain.model.pref.NotificationConfig;
+import com.object173.newsfeed.db.AppDatabase;
+import com.object173.newsfeed.features.base.data.local.LocalFeedDataSource;
+import com.object173.newsfeed.features.base.data.local.LocalFeedDataSourceImpl;
+import com.object173.newsfeed.features.base.data.local.LocalNewsDataSource;
+import com.object173.newsfeed.features.base.data.local.LocalNewsDataSourceImpl;
+import com.object173.newsfeed.features.base.data.network.NetworkDataSource;
+import com.object173.newsfeed.features.base.data.pref.PreferenceDataSource;
+import com.object173.newsfeed.features.base.model.network.RequestResult;
+import com.object173.newsfeed.features.base.model.pref.AutoUpdateConfig;
+import com.object173.newsfeed.features.base.model.pref.NotificationConfig;
+import com.object173.newsfeed.features.settings.data.UpdateRepositoreImpl;
 import com.object173.newsfeed.features.settings.domain.AutoUpdateService;
+import com.object173.newsfeed.features.settings.domain.UpdateRepository;
 import com.object173.newsfeed.libs.log.ILogger;
 import com.object173.newsfeed.libs.log.LoggerFactory;
-import com.object173.newsfeed.features.base.data.network.dto.NewsDTO;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -73,8 +75,8 @@ public class AutoUpdateWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        FeedRepository feedRepository = App.getFeedRepository(getApplicationContext());
-        List<String> feedList = feedRepository.getAutoUpdateList();
+        UpdateRepository updateRepository = getRepository();
+        List<String> feedList = updateRepository.getAutoUpdateList();
 
         final StateUpdateNotification progressNotification =
                 new StateUpdateNotification(getApplicationContext(), feedList.size());
@@ -88,7 +90,7 @@ public class AutoUpdateWorker extends Worker {
             }
             progressNotification.setCurrentProgress(getApplicationContext(), i);
 
-            Pair<RequestResult, Integer> result = feedRepository.updateFeedNews(feedList.get(i));
+            Pair<RequestResult, Integer> result = updateRepository.updateFeedNews(feedList.get(i));
 
             if(result.first == RequestResult.SUCCESS) {
                 countNews += result.second;
@@ -98,7 +100,7 @@ public class AutoUpdateWorker extends Worker {
 
         StateUpdateNotification.hide(getApplicationContext());
 
-        NotificationConfig notificationConfig = App.getConfigRepository(getApplicationContext()).getNotificationConfig();
+        NotificationConfig notificationConfig = App.getPreferenceDataSource(getApplicationContext()).getNotificationConfig();
         UpdateResultNotification.show(getApplicationContext(), notificationConfig, countFeed, countNews);
 
         return Result.success();
@@ -112,20 +114,19 @@ public class AutoUpdateWorker extends Worker {
         start(getApplicationContext());
     }
 
-    private static Date getCropDate(final int cacheFrequency) {
-        Date currentDate = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(currentDate);
-        calendar.add(Calendar.DATE, -cacheFrequency);
-        return calendar.getTime();
-    }
+    private UpdateRepository getRepository() {
+        final AppDatabase database = App.getDatabase(getApplicationContext());
 
-    private static News convertNews(final String feedLink, final NewsDTO newsDTO) {
-        return new News(newsDTO.getId(), feedLink, newsDTO.getTitle(),
-                newsDTO.getDescription(), newsDTO.getPublicationDate(), newsDTO.getSourceLink());
+        final LocalNewsDataSource mNewsDataSource = new LocalNewsDataSourceImpl(database);
+        final LocalFeedDataSource mFeedDataSource = new LocalFeedDataSourceImpl(database);
+        final PreferenceDataSource mPreferenceDataSource = App.getPreferenceDataSource(getApplicationContext());
+        final NetworkDataSource mNetworkDataSource = App.getNetworkDataSource(getApplicationContext());
+
+        return new UpdateRepositoreImpl(mNewsDataSource, mFeedDataSource,
+                mNetworkDataSource, mPreferenceDataSource);
     }
 
     private static AutoUpdateConfig getConfig(final Context context) {
-        return App.getConfigRepository(context).getAutoUpdateConfig();
+        return App.getPreferenceDataSource(context).getAutoUpdateConfig();
     }
 }

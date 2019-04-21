@@ -1,6 +1,6 @@
 package com.object173.newsfeed.features.main.presentation;
 
-import com.object173.newsfeed.features.base.domain.model.local.Category;
+import com.object173.newsfeed.features.base.model.local.Category;
 import com.object173.newsfeed.features.main.domain.CategoryInteractor;
 
 import java.util.LinkedList;

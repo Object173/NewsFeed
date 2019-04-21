@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.object173.newsfeed.R;
-import com.object173.newsfeed.features.base.domain.model.pref.NotificationConfig;
+import com.object173.newsfeed.features.base.model.pref.NotificationConfig;
 import com.object173.newsfeed.features.main.presentation.MainActivity;
 
 import androidx.core.app.NotificationCompat;

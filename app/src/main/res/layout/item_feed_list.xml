@@ -4,7 +4,7 @@
     <data>
         <variable
             name="feed"
-            type="com.object173.newsfeed.features.base.domain.model.local.Feed"/>
+            type="com.object173.newsfeed.features.base.model.local.Feed"/>
     </data>
 
     <androidx.cardview.widget.CardView

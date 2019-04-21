@@ -6,7 +6,7 @@ import androidx.paging.DataSource;
 import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
 
-import com.object173.newsfeed.features.base.domain.model.network.RequestResult;
+import com.object173.newsfeed.features.base.model.network.RequestResult;
 import com.object173.newsfeed.libs.log.LoggerFactory;
 
 import java.util.concurrent.Executors;

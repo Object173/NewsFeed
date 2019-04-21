@@ -1,8 +1,8 @@
 package com.object173.newsfeed.features.base.data.network;
 
-import com.object173.newsfeed.features.base.domain.model.local.Feed;
-import com.object173.newsfeed.features.base.domain.model.local.News;
-import com.object173.newsfeed.features.base.domain.model.network.RequestResult;
+import com.object173.newsfeed.features.base.model.local.Feed;
+import com.object173.newsfeed.features.base.model.local.News;
+import com.object173.newsfeed.features.base.model.network.RequestResult;
 
 import java.util.List;
 

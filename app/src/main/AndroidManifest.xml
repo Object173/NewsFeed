@@ -21,9 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".features.newslist.feed.presentation.NewsFeedActivity" />
-        <activity android:name=".features.feed.presentation.FeedActivity" />
-        <activity android:name=".features.news.presentation.NewsActivity" />
+        <activity android:name=".features.news.list.feed.presentation.NewsFeedActivity" />
+        <activity android:name=".features.feed.item.presentation.FeedActivity" />
+        <activity android:name=".features.news.item.presentation.NewsActivity" />
         <activity
             android:name=".features.settings.presentation.SettingsActivity"
             android:label="@string/title_activity_settings"/>

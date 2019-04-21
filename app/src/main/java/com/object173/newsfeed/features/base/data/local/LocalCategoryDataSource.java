@@ -5,7 +5,7 @@ import java.util.List;
 import androidx.lifecycle.LiveData;
 import androidx.paging.DataSource;
 
-import com.object173.newsfeed.features.base.domain.model.local.Category;
+import com.object173.newsfeed.features.base.model.local.Category;
 
 public interface LocalCategoryDataSource {
     LiveData<List<Category>> getCategories();

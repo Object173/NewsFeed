@@ -2,9 +2,8 @@ package com.object173.newsfeed.features.base.data.local;
 
 import com.object173.newsfeed.db.AppDatabase;
 import com.object173.newsfeed.db.entities.FeedDB;
-import com.object173.newsfeed.features.base.domain.model.local.Feed;
+import com.object173.newsfeed.features.base.model.local.Feed;
 
-import java.util.Date;
 import java.util.List;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;

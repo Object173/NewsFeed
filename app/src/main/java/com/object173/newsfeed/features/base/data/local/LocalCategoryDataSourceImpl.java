@@ -6,7 +6,7 @@ import androidx.paging.DataSource;
 
 import com.object173.newsfeed.db.AppDatabase;
 import com.object173.newsfeed.db.entities.CategoryDB;
-import com.object173.newsfeed.features.base.domain.model.local.Category;
+import com.object173.newsfeed.features.base.model.local.Category;
 
 import java.util.LinkedList;
 import java.util.List;

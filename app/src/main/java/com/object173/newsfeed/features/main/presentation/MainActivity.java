@@ -1,7 +1,6 @@
 package com.object173.newsfeed.features.main.presentation;
 
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,9 +11,9 @@ import android.widget.Spinner;
 import com.object173.newsfeed.R;
 import com.object173.newsfeed.databinding.ActivityMainBinding;
 import com.object173.newsfeed.features.base.presentation.BaseListFragment;
-import com.object173.newsfeed.features.feed.presentation.FeedActivity;
-import com.object173.newsfeed.features.feedlist.presentation.FeedListFragment;
-import com.object173.newsfeed.features.newslist.category.presentation.NewsCategoryFragment;
+import com.object173.newsfeed.features.feed.item.presentation.FeedActivity;
+import com.object173.newsfeed.features.feed.list.presentation.FeedListFragment;
+import com.object173.newsfeed.features.news.list.category.presentation.NewsCategoryFragment;
 import com.object173.newsfeed.features.settings.presentation.SettingsActivity;
 
 import java.util.Arrays;

@@ -5,9 +5,9 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.object173.newsfeed.R;
-import com.object173.newsfeed.features.base.domain.model.pref.AutoUpdateConfig;
-import com.object173.newsfeed.features.base.domain.model.pref.CacheConfig;
-import com.object173.newsfeed.features.base.domain.model.pref.NotificationConfig;
+import com.object173.newsfeed.features.base.model.pref.AutoUpdateConfig;
+import com.object173.newsfeed.features.base.model.pref.CacheConfig;
+import com.object173.newsfeed.features.base.model.pref.NotificationConfig;
 
 public class PreferenceDataSourceImpl implements PreferenceDataSource {
 

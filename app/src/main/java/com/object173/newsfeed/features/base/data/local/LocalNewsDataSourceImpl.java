@@ -6,7 +6,7 @@ import androidx.paging.DataSource;
 
 import com.object173.newsfeed.db.AppDatabase;
 import com.object173.newsfeed.db.entities.NewsDB;
-import com.object173.newsfeed.features.base.domain.model.local.News;
+import com.object173.newsfeed.features.base.model.local.News;
 
 import java.util.Date;
 import java.util.List;

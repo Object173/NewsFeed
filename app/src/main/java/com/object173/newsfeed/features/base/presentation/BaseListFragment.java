@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 import com.object173.newsfeed.R;
 import com.object173.newsfeed.databinding.FragmentListBinding;
-import com.object173.newsfeed.features.base.domain.model.network.RequestResult;
+import com.object173.newsfeed.features.base.model.network.RequestResult;
 
 public abstract class BaseListFragment<V, VH extends RecyclerView.ViewHolder> extends Fragment {
 

@@ -1,12 +1,11 @@
 package com.object173.newsfeed.features.base.data.local;
 
-import java.util.Date;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
 import androidx.paging.DataSource;
 
-import com.object173.newsfeed.features.base.domain.model.local.Feed;
+import com.object173.newsfeed.features.base.model.local.Feed;
 
 public interface LocalFeedDataSource {
     LiveData<Feed> getFeedAsync(String feedLink);
