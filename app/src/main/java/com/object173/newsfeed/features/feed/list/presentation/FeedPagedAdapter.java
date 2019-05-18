@@ -69,7 +69,9 @@ public class FeedPagedAdapter extends PagedListAdapter<Feed, FeedPagedAdapter.Fe
 
         @Override
         public boolean areContentsTheSame(@NonNull final Feed oldItem, @NonNull final Feed newItem) {
-            return oldItem.getTitle().equals(newItem.getTitle());
+            return oldItem.getTitle().equals(newItem.getTitle()) &&
+                    oldItem.getUpdated().getTime() == newItem.getUpdated().getTime() &&
+                    oldItem.getNotReviewedCount() == newItem.getNotReviewedCount();
         }
     }
 }

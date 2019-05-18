@@ -1,7 +1,10 @@
 package com.object173.newsfeed.features.base.data.network.conf;
 
+import android.text.format.Time;
+
 import com.object173.newsfeed.features.base.data.network.dto.FeedDTO;
 import com.object173.newsfeed.features.base.data.network.dto.NewsDTO;
+import com.object173.newsfeed.libs.parser.xml.StringParser;
 import com.object173.newsfeed.libs.parser.xml.annotations.XmlField;
 import com.object173.newsfeed.libs.parser.xml.annotations.XmlMethod;
 import com.object173.newsfeed.libs.parser.xml.annotations.XmlObject;
@@ -66,7 +69,7 @@ public final class RssFeed implements FeedDTO {
         private String description;
         @XmlField(tag="author")
         private String author;
-        @XmlField(tag="lastBuildDate")
+        @XmlField(tag="lastBuildDate", parser = DateParser.class)
         private Date updated;
         @XmlField
         private Icon icon;
@@ -96,7 +99,7 @@ public final class RssFeed implements FeedDTO {
             private String description;
             @XmlField(tag = "link")
             private String sourceLink;
-            @XmlField(tag = "pubDate")
+            @XmlField(tag = "pubDate", parser = DateParser.class)
             private Date publicationDate;
 
             @Override
@@ -128,6 +131,13 @@ public final class RssFeed implements FeedDTO {
             public String getSourceLink() {
                 return sourceLink;
             }
+        }
+    }
+
+    public static class DateParser implements StringParser<Date> {
+        @Override
+        public Date parse(String input) {
+            return new Date(input);
         }
     }
 }

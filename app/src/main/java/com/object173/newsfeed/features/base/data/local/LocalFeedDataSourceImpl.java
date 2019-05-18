@@ -30,14 +30,18 @@ public class LocalFeedDataSourceImpl implements LocalFeedDataSource {
 
     @Override
     public DataSource.Factory<Integer, Feed> getFeedDataSource() {
-        return mDatabase.feedDao().getAllDataSource().map(LocalFeedDataSourceImpl::convertToFeed);
+        return mDatabase.feedDao().getAllDataSource().map(feedDB -> {
+            Feed feed = convertToFeed(feedDB.feed);
+            feed.setNotReviewedCount(feedDB.notReviewedCount);
+            return feed;
+        });
     }
 
     @Override
     public DataSource.Factory<Integer, Feed> getFeedDataSource(String category) {
         return mDatabase.feedDao().getByCategory(category).map(feedDB -> {
             Feed feed = convertToFeed(feedDB.feed);
-            feed.setNotReviewedCount(feed.getNotReviewedCount());
+            feed.setNotReviewedCount(feedDB.notReviewedCount);
             return feed;
         });
     }
@@ -83,6 +87,9 @@ public class LocalFeedDataSourceImpl implements LocalFeedDataSource {
     }
 
     private static Feed convertToFeed(FeedDB feedDB) {
+        if(feedDB == null) {
+            return null;
+        }
         return new Feed(feedDB.link, feedDB.title, feedDB.description, feedDB.sourceLink,
                 feedDB.updated, feedDB.iconLink, feedDB.author, feedDB.customName,
                 feedDB.isAutoRefresh, feedDB.category);

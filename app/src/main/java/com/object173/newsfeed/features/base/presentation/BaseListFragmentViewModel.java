@@ -1,5 +1,6 @@
 package com.object173.newsfeed.features.base.presentation;
 
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.paging.DataSource;
@@ -9,6 +10,7 @@ import androidx.paging.PagedList;
 import com.object173.newsfeed.features.base.model.network.RequestResult;
 import com.object173.newsfeed.libs.log.LoggerFactory;
 
+import java.util.List;
 import java.util.concurrent.Executors;
 
 public abstract class BaseListFragmentViewModel<T> extends ViewModel {
@@ -35,21 +37,27 @@ public abstract class BaseListFragmentViewModel<T> extends ViewModel {
         return mListData;
     }
 
-    LiveData<PagedList<T>> getListData(String param) {
+    LiveData<PagedList<T>> getListData(String param, LifecycleOwner owner) {
+        if(mListData != null) {
+            mListData.removeObservers(owner);
+        }
+
+        if(param == null) {
+            return getListData();
+        }
+
         if(param.equals(mParam) && mListData != null) {
             return mListData;
         }
         mParam = param;
-        LoggerFactory.get(this.getClass()).info(mParam);
         return getListData(loadFactoryData(param));
     }
 
-    LiveData<PagedList<T>> getListData() {
+    private LiveData<PagedList<T>> getListData() {
         if(mParam == null && mListData != null) {
             return mListData;
         }
         mParam = null;
-        LoggerFactory.get(this.getClass()).info("null");
         return getListData(loadFactoryData());
     }
 
@@ -80,4 +88,15 @@ public abstract class BaseListFragmentViewModel<T> extends ViewModel {
     protected boolean isRefreshEnabled() {
         return false;
     }
+
+    void checkReviewedItemsCount(int count) {
+        if(mListData == null || mListData.getValue() == null) {
+            return;
+        }
+
+        List<T> data = mListData.getValue().snapshot().subList(0, count);
+        checkReviewed(data);
+    }
+
+    protected void checkReviewed(List<T> items) {}
 }

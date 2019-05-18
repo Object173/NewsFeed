@@ -7,6 +7,7 @@ public enum RequestResult {
     INCORRECT_RESPONSE,
     EXISTS,
     NOT_EXIST,
+    NO_INTERNET,
     FAIL,
     SUCCESS
 }

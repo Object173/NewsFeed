@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.paging.DataSource;
 
+import com.google.common.collect.Lists;
 import com.object173.newsfeed.features.base.data.local.LocalFeedDataSource;
 import com.object173.newsfeed.features.base.data.local.LocalNewsDataSource;
 import com.object173.newsfeed.features.base.data.network.NetworkDataSource;
@@ -68,9 +69,9 @@ public class NewsCategoryRepositoryImpl implements NewsCategoryRepository {
     }
 
     @Override
-    public void checkReviewed(long id) {
+    public void checkReviewed(List<News> reviewedList) {
         mExecutorService.execute(() -> {
-            mNewsDataSource.checkReviewed(id);
+            mNewsDataSource.checkReviewed(Lists.transform(reviewedList, News::getId));
         });
     }
 

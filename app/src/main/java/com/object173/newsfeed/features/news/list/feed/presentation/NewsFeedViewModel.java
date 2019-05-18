@@ -8,6 +8,8 @@ import com.object173.newsfeed.features.news.list.feed.domain.NewsFeedInteractor;
 import androidx.lifecycle.LiveData;
 import androidx.paging.DataSource;
 
+import java.util.List;
+
 public class NewsFeedViewModel extends BaseListFragmentViewModel<News> {
 
     private final NewsFeedInteractor mNewsInteractor;
@@ -39,5 +41,10 @@ public class NewsFeedViewModel extends BaseListFragmentViewModel<News> {
     @Override
     protected boolean isRefreshEnabled() {
         return true;
+    }
+
+    @Override
+    protected void checkReviewed(List<News> items) {
+        mNewsInteractor.checkReviewed(items);
     }
 }

@@ -2,6 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="feed"
             type="com.object173.newsfeed.features.base.model.local.Feed"/>
@@ -36,6 +37,7 @@
                 android:id="@+id/notReviewedTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="@{feed.notReviewedCount > 0 ? View.VISIBLE : View.GONE}"
                 android:text="@{String.format(@string/not_reviewed_count_format, feed.notReviewedCount)}"/>
 
             <TextView

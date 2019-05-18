@@ -6,6 +6,8 @@ import androidx.paging.DataSource;
 import com.object173.newsfeed.features.base.model.local.News;
 import com.object173.newsfeed.features.base.model.network.RequestResult;
 
+import java.util.List;
+
 public class NewsCategoryInteractorImpl implements NewsCategoryInteractor {
 
     private final NewsCategoryRepository mRepository;
@@ -30,8 +32,8 @@ public class NewsCategoryInteractorImpl implements NewsCategoryInteractor {
     }
 
     @Override
-    public void checkReviewed(long id) {
-        mRepository.checkReviewed(id);
+    public void checkReviewed(List<News> reviewedList) {
+        mRepository.checkReviewed(reviewedList);
     }
 
     @Override

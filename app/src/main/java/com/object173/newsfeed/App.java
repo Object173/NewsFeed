@@ -40,7 +40,7 @@ public class App extends Application {
         mDatabase = Room.databaseBuilder(this, AppDatabase.class, "database")
                 .build();
 
-        mNetworkDataSource = new NetworkDataSourceImpl();
+        mNetworkDataSource = new NetworkDataSourceImpl(getApplicationContext());
         mPreferenceDataSource = new PreferenceDataSourceImpl(getApplicationContext());
     }
 }

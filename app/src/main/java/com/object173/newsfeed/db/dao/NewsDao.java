@@ -39,8 +39,8 @@ public interface NewsDao {
     @Query("UPDATE newsdb SET isHidden=:isHidden WHERE id=:id ")
     int setHidden(long id, boolean isHidden);
 
-    @Query("UPDATE newsdb SET isReviewed=:isReviewed WHERE id=:id ")
-    int setReviewed(long id, boolean isReviewed);
+    @Query("UPDATE newsdb SET isReviewed=1 WHERE id IN (:ids) AND not isReviewed")
+    int checkReviewed(List<Long> ids);
 
     @Query("DELETE FROM newsdb WHERE feedLink = :feedLink and id NOT IN " +
             "(SELECT id FROM newsdb WHERE feedLink=:feedLink ORDER BY pubDate DESC LIMIT :cacheSize)")

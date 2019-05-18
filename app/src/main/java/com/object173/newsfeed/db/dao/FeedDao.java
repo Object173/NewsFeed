@@ -19,15 +19,6 @@ import androidx.room.Update;
 public interface FeedDao {
 
     @Transaction
-    @Query("SELECT * FROM feeddb ORDER BY updated")
-    List<FeedDB> getAll();
-
-    @Transaction
-    @Query("SELECT FeedDB.*, (SELECT COUNT(*) FROM newsdb WHERE feedLink=feeddb.link and not isReviewed) " +
-            "as notReviewedCount FROM feeddb WHERE category=:category ORDER BY updated DESC")
-    DataSource.Factory<Integer, FeedDB.FeedWithReviewed> getByCategory(String category);
-
-    @Transaction
     @Query("SELECT * FROM feeddb WHERE link = :feedLink ORDER BY updated DESC")
     LiveData<FeedDB> getByIdAsync(String feedLink);
 
@@ -40,13 +31,14 @@ public interface FeedDao {
     int isExist(String feedLink);
 
     @Transaction
-    @Query("SELECT * FROM feeddb ORDER BY updated DESC")
-    DataSource.Factory<Integer, FeedDB> getAllDataSource();
+    @Query("SELECT FeedDB.*, (SELECT COUNT(*) FROM newsdb WHERE feedLink=feeddb.link and not isReviewed) " +
+            "as notReviewedCount FROM feeddb ORDER BY updated DESC")
+    DataSource.Factory<Integer, FeedDB.FeedWithReviewed> getAllDataSource();
 
     @Transaction
     @Query("SELECT FeedDB.*, (SELECT COUNT(*) FROM newsdb WHERE feedLink=feeddb.link and not isReviewed) " +
-            "as notReviewedCount FROM feeddb ORDER BY updated DESC")
-    DataSource.Factory<Integer, FeedDB.FeedWithReviewed> getFeedList();
+            "as notReviewedCount FROM feeddb WHERE category=:category ORDER BY updated DESC")
+    DataSource.Factory<Integer, FeedDB.FeedWithReviewed> getByCategory(String category);
 
     @Transaction
     @Query("SELECT feeddb.link FROM feeddb WHERE isAutoRefresh ORDER BY updated")
@@ -62,10 +54,6 @@ public interface FeedDao {
 
     @Insert
     long insert(FeedDB feed);
-
-    @TypeConverters({DateConverter.class})
-    @Query("UPDATE feeddb SET updated=:updated WHERE link=:feedLink")
-    void setUpdated(String feedLink, Date updated);
 
     @Transaction
     @Query("DELETE FROM feeddb WHERE link=:feedLink")

@@ -1,10 +1,16 @@
 package com.object173.newsfeed.libs.network;
 
+import com.object173.newsfeed.libs.log.LoggerFactory;
+
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.logging.Logger;
 
 public class DownloaderImpl<T> implements Downloader {
 
@@ -21,18 +27,13 @@ public class DownloaderImpl<T> implements Downloader {
     @Override
     public Response downloadObject(final String url) {
         HttpURLConnection connection = null;
+        final InputStream inStream;
         try {
             try {
                 connection = openConnection(url);
                 if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                     return Response.getHttpError(Response.Result.HTTP_ERROR, connection.getResponseCode());
                 }
-            } catch (IOException e) {
-                return Response.getError(Response.Result.CONNECTION_ERROR);
-            }
-
-            final InputStream inStream;
-            try {
                 inStream = new BufferedInputStream(connection.getInputStream());
             } catch (IOException e) {
                 return Response.getError(Response.Result.CONNECTION_ERROR);
@@ -44,8 +45,7 @@ public class DownloaderImpl<T> implements Downloader {
             } catch (IOException e) {
                 return Response.getError(Response.Result.PARSE_ERROR);
             }
-        }
-        finally {
+        } finally {
             if(connection != null) {
                 connection.disconnect();
             }

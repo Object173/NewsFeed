@@ -6,6 +6,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.paging.DataSource;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import com.object173.newsfeed.features.base.data.local.LocalFeedDataSource;
 import com.object173.newsfeed.features.base.data.local.LocalNewsDataSource;
 import com.object173.newsfeed.features.base.data.network.NetworkDataSource;
@@ -17,8 +19,11 @@ import com.object173.newsfeed.features.base.model.network.RequestResult;
 import com.object173.newsfeed.features.base.model.pref.CacheConfig;
 import com.object173.newsfeed.features.news.list.feed.domain.NewsFeedRepository;
 
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
+
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -64,9 +69,9 @@ public class NewsFeedRepositoryImpl implements NewsFeedRepository {
     }
 
     @Override
-    public void checkReviewed(long id) {
+    public void checkReviewed(List<News> reviewedList) {
         mExecutorService.execute(() -> {
-            mNewsDataSource.checkReviewed(id);
+            mNewsDataSource.checkReviewed(Lists.transform(reviewedList, News::getId));
         });
     }
 

@@ -20,10 +20,12 @@ import com.google.android.material.snackbar.Snackbar;
 import com.object173.newsfeed.R;
 import com.object173.newsfeed.databinding.FragmentListBinding;
 import com.object173.newsfeed.features.base.model.network.RequestResult;
+import com.object173.newsfeed.libs.log.LoggerFactory;
 
 public abstract class BaseListFragment<V, VH extends RecyclerView.ViewHolder> extends Fragment {
 
     private static final String ARG_PARAM = "param";
+    private static final String ARG_CURRENT_POSITION = "current_position";
 
     protected BaseListFragmentViewModel<V> mViewModel;
     private FragmentListBinding mBinding;
@@ -32,12 +34,18 @@ public abstract class BaseListFragment<V, VH extends RecyclerView.ViewHolder> ex
     private String mCurrentParam;
     private MutableLiveData<Boolean> mIsListEmpty = new MutableLiveData<>();
 
+    private int mCurrentPosition = 0;
+
     public static Bundle getBundle(String param) {
         Bundle bundle = new Bundle();
         if(param != null) {
             bundle.putString(ARG_PARAM, param);
         }
         return bundle;
+    }
+
+    public static void putParam(Bundle bundle, String param) {
+        bundle.putString(ARG_PARAM, param);
     }
 
     protected abstract BaseListFragmentViewModel<V> getViewModel();
@@ -57,18 +65,11 @@ public abstract class BaseListFragment<V, VH extends RecyclerView.ViewHolder> ex
         mCurrentParam = param;
         mIsListEmpty.setValue(null);
 
-        if(param != null) {
-            mViewModel.getListData(param).observe(this, feedList -> {
-                mPagedAdapter.submitList(feedList);
-                mIsListEmpty.setValue(feedList.isEmpty());
-            });
-        }
-        else {
-            mViewModel.getListData().observe(this, feedList -> {
-                mPagedAdapter.submitList(feedList);
-                mIsListEmpty.setValue(feedList.isEmpty());
-            });
-        }
+        mViewModel.getListData(param, this).observe(this, feedList -> {
+            mPagedAdapter.submitList(feedList);
+            LoggerFactory.get(getClass()).info("notifyDataSetChanged");
+            mIsListEmpty.setValue(feedList.isEmpty());
+        });
     }
 
     @Override
@@ -101,11 +102,25 @@ public abstract class BaseListFragment<V, VH extends RecyclerView.ViewHolder> ex
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(ARG_PARAM, mCurrentParam);
+
+        if(mBinding != null) {
+            mCurrentPosition =  mBinding.recyclerView.getVerticalScrollbarPosition();
+        }
+        outState.putInt(ARG_CURRENT_POSITION, mCurrentPosition);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        mViewModel.checkReviewedItemsCount(mPagedAdapter.getItemCount());
     }
 
     private void initRecyclerView() {
         mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mBinding.recyclerView.setAdapter(mPagedAdapter);
+
+        mBinding.recyclerView.scrollToPosition(mCurrentPosition);
     }
 
     private void initRefreshLayout() {
@@ -133,6 +148,7 @@ public abstract class BaseListFragment<V, VH extends RecyclerView.ViewHolder> ex
     private void initParam(Bundle savedInstanceState) {
         if(savedInstanceState != null) {
             setParam(savedInstanceState.getString(ARG_PARAM));
+            mCurrentPosition = savedInstanceState.getInt(ARG_CURRENT_POSITION);
         }
         else {
             if(getArguments() != null) {

@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     private String mCurrentCategory;
     private String[] mCategoriesTitle;
 
+    private Bundle listFragmentBundle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,10 +55,12 @@ public class MainActivity extends AppCompatActivity {
 
         mBinding.tabs.setup(this, getSupportFragmentManager(), R.id.tabContent);
 
+        listFragmentBundle = BaseListFragment.getBundle(mCurrentCategory);
+
         mBinding.tabs.addTab(mBinding.tabs.newTabSpec(TAG_FEED).setIndicator(getString(R.string.tab_feed_title)),
-                FeedListFragment.class, BaseListFragment.getBundle(mCurrentCategory));
+                FeedListFragment.class, listFragmentBundle);
         mBinding.tabs.addTab(mBinding.tabs.newTabSpec(TAG_NEWS).setIndicator(getString(R.string.tab_news_title)),
-                NewsCategoryFragment.class, BaseListFragment.getBundle(mCurrentCategory));
+                NewsCategoryFragment.class, listFragmentBundle);
 
         mViewModel.getCategories().observe(this, strings -> {
             mCategoriesTitle = new String[strings.size() + 1];
@@ -75,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
 
         Fragment feedFragment = manager.findFragmentByTag(TAG_FEED);
         Fragment newsFragment = manager.findFragmentByTag(TAG_NEWS);
+
+        BaseListFragment.putParam(listFragmentBundle, category);
 
         if(feedFragment != null) {
             ((BaseListFragment)feedFragment).setParam(category);

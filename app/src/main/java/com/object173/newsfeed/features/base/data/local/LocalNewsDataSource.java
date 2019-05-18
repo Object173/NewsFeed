@@ -19,5 +19,5 @@ public interface LocalNewsDataSource {
     int insertNews(List<News> newsList, int cacheSize, Date cropDate);
     boolean isNewsExist(String feedLink, Date pubDate);
     boolean hideNews(long id);
-    void checkReviewed(long id);
+    void checkReviewed(List<Long> ids);
 }

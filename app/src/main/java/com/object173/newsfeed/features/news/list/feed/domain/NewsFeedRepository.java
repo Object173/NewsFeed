@@ -6,6 +6,8 @@ import androidx.paging.DataSource;
 import com.object173.newsfeed.features.base.model.local.News;
 import com.object173.newsfeed.features.base.model.network.RequestResult;
 
+import java.util.List;
+
 public interface NewsFeedRepository {
     LiveData<News> getNews(Long id);
 
@@ -15,5 +17,5 @@ public interface NewsFeedRepository {
     LiveData<RequestResult> updateFeedNewsAsync(String feedLink);
 
     LiveData<Boolean> hideNews(long id);
-    void checkReviewed(long id);
+    void checkReviewed(List<News> reviewedList);
 }

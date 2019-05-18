@@ -15,20 +15,13 @@ import java.util.Map;
 
 public class XmlObjectParserFactory {
 
-    public static XmlObjectParser get(final Class<?> parsedType,
-                               Map<Class<?>, StringParser> stringParserMap) {
-        if(stringParserMap == null) {
-            stringParserMap = new HashMap<>();
-        }
-        if(!stringParserMap.containsKey(String.class)) {
-            stringParserMap.put(String.class, input -> input);
-        }
-        return createParser(parsedType, new HashMap<>(), stringParserMap);
+    public static XmlObjectParser get(final Class<?> parsedType) {
+        return createParser(parsedType, new HashMap<>(), new HashMap<>());
     }
 
     private static XmlObjectParser createParser(final Class<?> parsedType,
                                                 final Map<Class<?>, XmlObjectParser> objectParserMap,
-                                               final Map<Class<?>, StringParser> stringParserMap) {
+                                                final Map<Class<?>, StringParser> stringParserMap) {
         if(!parsedType.isAnnotationPresent(XmlObject.class)) {
             throw new IllegalArgumentException(String.format("class %s not annotated XmlObject", parsedType));
         }
@@ -50,14 +43,9 @@ public class XmlObjectParserFactory {
         for(Field field: fields){
             if(field.isAnnotationPresent(XmlField.class)) {
                 XmlField xmlField = field.getAnnotation(XmlField.class);
-                if(!stringParserMap.containsKey(field.getType())) {
-                    String tag = addObjectParser(field.getType(), xmlField.tag(),
-                            objectParserMap, stringParserMap);
-                    tagToField.put(tag, field);
-                }
-                else {
-                    tagToField.put(xmlField.tag(), field);
-                }
+                String tag = addObjectParser(field.getType(), xmlField.tag(), xmlField.parser(),
+                        objectParserMap, stringParserMap);
+                tagToField.put(tag, field);
             }
             if(field.isAnnotationPresent(XmlAttribute.class)) {
                 XmlAttribute parsedAttr = field.getAnnotation(XmlAttribute.class);
@@ -85,7 +73,7 @@ public class XmlObjectParserFactory {
                 continue;
             }
 
-            final String tag = addObjectParser(type, xmlMethod.tag(), objectParserMap, stringParserMap);
+            final String tag = addObjectParser(type, xmlMethod.tag(), xmlMethod.parser(), objectParserMap, stringParserMap);
             tagToMethod.put(tag, method);
         }
 
@@ -98,15 +86,24 @@ public class XmlObjectParserFactory {
                 .build(parsedType, xmlObject.tag());
     }
 
-    private static String addObjectParser(final Class<?> type, final String tag,
+    private static String addObjectParser(final Class<?> type, final String tag, Class<? extends StringParser> parserClass,
                                           final Map<Class<?>, XmlObjectParser> objectParsers,
                                           final Map<Class<?>, StringParser> stringParserMap) {
-        if(!objectParsers.containsKey(type)) {
-            objectParsers.put(type, XmlObjectParserFactory.createParser(type, objectParsers, stringParserMap));
-        }
         if(type.isAnnotationPresent(XmlObject.class)) {
+            if(!objectParsers.containsKey(type)) {
+                objectParsers.put(type, XmlObjectParserFactory.createParser(type, objectParsers, stringParserMap));
+            }
             XmlObject childObject = type.getAnnotation(XmlObject.class);
             return childObject.tag();
+        }
+        if(!stringParserMap.containsKey(parserClass)) {
+            try {
+                stringParserMap.put(type, parserClass.newInstance());
+            }
+            catch (IllegalAccessException | InstantiationException e) {
+                throw new IllegalArgumentException(String
+                        .format("Invalid string parser class: %s", parserClass.getName()), e);
+            }
         }
         return tag;
     }

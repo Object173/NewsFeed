@@ -1,5 +1,10 @@
 package com.object173.newsfeed.features.base.data.network;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.text.format.Time;
+
 import com.object173.newsfeed.features.base.data.network.conf.AtomFeed;
 import com.object173.newsfeed.features.base.data.network.conf.RssFeed;
 import com.object173.newsfeed.features.base.data.network.dto.FeedDTO;
@@ -25,22 +30,21 @@ import java.util.Map;
 public class NetworkDataSourceImpl implements NetworkDataSource {
 
     private final Downloader<FeedDTO> mDownloader;
+    private final Context mContext;
 
-    public NetworkDataSourceImpl() {
-        final Map<Class<?>, StringParser> stringParserMap = new HashMap<>();
-        stringParserMap.put(Date.class, Date::new);
-        stringParserMap.put(Integer.class, Integer::parseInt);
-
-        ResponseParser<FeedDTO> parser = new XmlResponseParser<>(new XmlObjectParser[]{
-                XmlObjectParserFactory.get(AtomFeed.class, stringParserMap),
-                XmlObjectParserFactory.get(RssFeed.class, stringParserMap)
-        });
-
+    public NetworkDataSourceImpl(final Context context) {
+        ResponseParser<FeedDTO> parser = new XmlResponseParser<>(AtomFeed.class, RssFeed.class);
         mDownloader = DownloaderFactory.get(parser);
+
+        mContext = context;
     }
 
     @Override
     public ResponseDTO getNewsFeed(String feedLink) {
+        if(!checkInternetConnection()) {
+            return ResponseDTO.createFail(RequestResult.NO_INTERNET);
+        }
+
         final Response<FeedDTO> response = mDownloader.downloadObject(feedLink);
 
         if(response.result != com.object173.newsfeed.libs.network.Response.Result.Success) {
@@ -72,5 +76,13 @@ public class NetworkDataSourceImpl implements NetworkDataSource {
     private static News convertNews(final NewsDTO newsDTO, final String feedLink) {
         return new News(newsDTO.getId(), feedLink, newsDTO.getTitle(),
                 newsDTO.getDescription(), newsDTO.getPublicationDate(), newsDTO.getSourceLink());
+    }
+
+    private boolean checkInternetConnection()
+    {
+        ConnectivityManager cm =
+                (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }

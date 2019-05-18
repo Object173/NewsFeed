@@ -6,6 +6,8 @@ import com.object173.newsfeed.features.base.model.network.RequestResult;
 import androidx.lifecycle.LiveData;
 import androidx.paging.DataSource;
 
+import java.util.List;
+
 public class NewsFeedInteractorImpl implements NewsFeedInteractor {
 
     private final NewsFeedRepository mRepository;
@@ -30,8 +32,8 @@ public class NewsFeedInteractorImpl implements NewsFeedInteractor {
     }
 
     @Override
-    public void checkReviewed(long id) {
-        mRepository.checkReviewed(id);
+    public void checkReviewed(List<News> reviewedList) {
+        mRepository.checkReviewed(reviewedList);
     }
 
     @Override

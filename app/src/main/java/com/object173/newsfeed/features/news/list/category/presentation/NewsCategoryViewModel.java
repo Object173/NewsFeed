@@ -8,6 +8,8 @@ import com.object173.newsfeed.features.base.model.network.RequestResult;
 import com.object173.newsfeed.features.base.presentation.BaseListFragmentViewModel;
 import com.object173.newsfeed.features.news.list.category.domain.NewsCategoryInteractor;
 
+import java.util.List;
+
 public class NewsCategoryViewModel extends BaseListFragmentViewModel<News> {
 
     private final NewsCategoryInteractor mNewsInteractor;
@@ -39,5 +41,10 @@ public class NewsCategoryViewModel extends BaseListFragmentViewModel<News> {
     @Override
     protected boolean isRefreshEnabled() {
         return true;
+    }
+
+    @Override
+    protected void checkReviewed(List<News> items) {
+        mNewsInteractor.checkReviewed(items);
     }
 }

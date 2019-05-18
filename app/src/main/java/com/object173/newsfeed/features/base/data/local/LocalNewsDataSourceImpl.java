@@ -75,8 +75,8 @@ public class LocalNewsDataSourceImpl implements LocalNewsDataSource {
     }
 
     @Override
-    public void checkReviewed(long id) {
-        mDatabase.newsDao().setReviewed(id, true);
+    public void checkReviewed(List<Long> ids) {
+        mDatabase.newsDao().checkReviewed(ids);
     }
 
     private static News convertToNews(NewsDB newsDB) {

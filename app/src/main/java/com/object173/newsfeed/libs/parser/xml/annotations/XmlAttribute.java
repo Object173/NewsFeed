@@ -1,5 +1,7 @@
 package com.object173.newsfeed.libs.parser.xml.annotations;
 
+import com.object173.newsfeed.libs.parser.xml.StringParser;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

@@ -1,5 +1,5 @@
 package com.object173.newsfeed.libs.parser.xml;
 
-public interface StringParser {
-    Object parse(String input);
+public interface StringParser<T> {
+    T parse(String input);
 }

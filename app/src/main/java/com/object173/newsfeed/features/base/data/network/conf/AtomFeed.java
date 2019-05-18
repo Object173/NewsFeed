@@ -1,7 +1,10 @@
 package com.object173.newsfeed.features.base.data.network.conf;
 
+import android.text.format.Time;
+
 import com.object173.newsfeed.features.base.data.network.dto.FeedDTO;
 import com.object173.newsfeed.features.base.data.network.dto.NewsDTO;
+import com.object173.newsfeed.libs.parser.xml.StringParser;
 import com.object173.newsfeed.libs.parser.xml.annotations.XmlAttribute;
 import com.object173.newsfeed.libs.parser.xml.annotations.XmlField;
 import com.object173.newsfeed.libs.parser.xml.annotations.XmlMethod;
@@ -24,7 +27,7 @@ public final class AtomFeed implements FeedDTO {
     private Author author;
     @XmlField(tag = "icon")
     private String iconLink;
-    @XmlField(tag = "updated")
+    @XmlField(tag = "updated", parser = DateParser.class)
     private Date updatedDate;
     private List<NewsDTO> newsList = new ArrayList<>();
 
@@ -94,7 +97,7 @@ public final class AtomFeed implements FeedDTO {
         private String description;
         @XmlField(tag = "link")
         private Link sourceLink;
-        @XmlField(tag = "updated")
+        @XmlField(tag = "updated", parser = DateParser.class)
         private Date publicationDate;
 
         @Override
@@ -125,6 +128,15 @@ public final class AtomFeed implements FeedDTO {
         @Override
         public String getSourceLink() {
             return sourceLink != null ? sourceLink.link : null;
+        }
+    }
+
+    public static class DateParser implements StringParser<Date> {
+        @Override
+        public Date parse(String input) {
+            final Time time = new Time();
+            time.parse3339(input);
+            return new Date(time.toMillis(false));
         }
     }
 }

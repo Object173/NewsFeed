@@ -11,6 +11,9 @@ import com.object173.newsfeed.features.news.item.presentation.NewsActivity;
 import com.object173.newsfeed.features.news.list.NewsListViewModelFactory;
 import com.object173.newsfeed.features.news.list.NewsPagedAdapter;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class NewsFeedFragment extends BaseListFragment<News, NewsPagedAdapter.NewsViewHolder> {
 
     public static NewsFeedFragment newInstanceByFeed(final String feedLink) {
