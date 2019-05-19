@@ -1,15 +1,16 @@
 package com.object173.newsfeed.db.entities;
 
-import java.util.Date;
-
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
-import androidx.room.Relation;
 import androidx.room.TypeConverters;
+
+import com.object173.newsfeed.db.converter.DateConverter;
+
+import java.util.Date;
 
 import static androidx.room.ForeignKey.CASCADE;
 import static androidx.room.ForeignKey.SET_NULL;

@@ -2,9 +2,12 @@ package com.object173.newsfeed.features.news.list.feed.presentation;
 
 import android.content.Context;
 import android.content.Intent;
-import com.object173.newsfeed.features.base.presentation.SingleFragmentActivity;
+import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+
+import com.object173.newsfeed.features.base.presentation.SingleFragmentActivity;
+import com.object173.newsfeed.features.news.item.presentation.NewsActivity;
 
 public class NewsFeedActivity extends SingleFragmentActivity {
 
@@ -18,6 +21,15 @@ public class NewsFeedActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        return NewsFeedFragment.newInstanceByFeed(getIntent().getExtras().getString(KEY_FEED_LINK));
+        Bundle extras = getIntent().getExtras();
+        return NewsFeedFragment.newInstanceByFeed(extras != null ? extras.getString(KEY_FEED_LINK) : null);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        ((NewsFeedFragment)mFragment).getClickedItem().observe(this, event ->
+                startActivity(NewsActivity.getIntent(this, event.mItem.getId())));
     }
 }

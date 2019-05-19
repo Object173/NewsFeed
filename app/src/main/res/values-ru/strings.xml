@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Новостная лента</string>
+
+    <string name="add_feed">Добавить канал</string>
+    <string name="feed_link">Ссылка на канал</string>
+    <string name="add">Добавить</string>
+
+    <string name="share_news_chooser_title">Поделиться новостью</string>
+    <string name="open_link_chooser">Открыть источник новости</string>
+    <string name="news_share_format">%s /n %s /n</string>
+    <string name="share_label">Поделиться</string>
+    <string name="open_source">Источник</string>
+
+    <string name="feed_share_format">%s /n %s /n</string>
+
+    <string name="feed_removed_message">Новостной канал был удален</string>
+    <string name="news_hidden_message">Новость скрыта</string>
+    <string name="not_reviewed_count_format">Не просмотренных новостей: %d</string>
+    <string name="custom_title_switch">Использовать пользовательское название</string>
+    <string name="auto_updated_switch">Обновлять автоматически</string>
+    <string name="feed_category_label">Категория</string>
+    <string name="custom_feed_name">Пользовательское название</string>
+
+    <string name="remove_category_message">Категория удалена</string>
+
+    <string name="title_activity_settings">Настройки</string>
+
+    <string name="style_options_category">Оформление</string>
+    <string name="theme_preference_title">Тема</string>
+    <string-array name="current_theme_entities">
+        <item>Базовая</item>
+        <item>Темная</item>
+    </string-array>
+
+    <string name="refresh_options_category">Обновление</string>
+    <string name="auto_refresh_enabled_title">Автоматическое обновление</string>
+    <string name="auto_refresh_enabled_summary">Автоматически обновлять каналы новостей</string>
+
+    <string name="auto_refresh_frequency_title">Период обновления</string>
+    <string name="auto_refresh_frequency_summary">часов</string>
+
+    <string name="wifi_only_title">Только по WI-FI</string>
+    <string name="wifi_only_summary">Обновлять только при подключении по WI-FI</string>
+
+    <string name="notification_options_category">Уведомления</string>
+    <string name="notification_enabled_title">Включить уведомления</string>
+    <string name="notification_enabled_summary">Отображать уведомления при обновлении</string>
+
+    <string name="notification_type_title">Тип уведомлений</string>
+    <string name="menu_settings_title">Настройки</string>
+    <string-array name="notification_type_entities">
+        <item>Нет</item>
+        <item>Только вибрация</item>
+        <item>Только звук</item>
+        <item>Звук и вибрация</item>
+    </string-array>
+
+    <string name="cache_options_category">Настроки кэширования</string>
+    <string name="cache_size_title">Размер кэша канала</string>
+    <string name="cache_size_summary">новостей</string>
+
+    <string name="cache_frequency_title">Период хранения</string>
+    <string name="cache_frequency_summary">дней</string>
+
+    <string name="notification_result_update_title">Канал был обновлен</string>
+    <string name="notification_result_update_content">Обновлено Каналов: %d, Новостей: %d</string>
+
+    <string name="notification_update_progress_title">Обновление каналов</string>
+    <string name="category_name">Название категории</string>
+    <string name="add_category">Добавить категорию</string>
+    <string name="dialog_add_category_title">Новая категория</string>
+
+    <string name="non_category_title">Нет категории</string>
+    <string name="category">Категория</string>
+    <string name="list_is_empty">Список пуст</string>
+
+    <string name="tab_feed_title">Каналы</string>
+    <string name="tab_news_title">Новости</string>
+
+    <string name="date_time_format">%s %s</string>
+
+    <string name="http_fail_message">Ошибка запроса к серверу</string>
+    <string name="incorrect_link_message">Некорректная ссылка на канал</string>
+    <string name="incorrect_response_message">Некорректный ответ сервера</string>
+    <string name="feed_exists_message">Канал уже добавлен</string>
+    <string name="feed_not_exists_message">Канал не был добавлен</string>
+    <string name="no_internet_message">Соединение с интернетом отключено</string>
+    <string name="unknown_error_message">Ошибка загрузки данных</string>
+
+    <string name="change_theme_message">Применение выбранной темы произойдет после перезапуска приложения</string>
+</resources>

@@ -1,35 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="pref_key_auto_refresh_enabled">pref_key_auto_refresh</string>
+    <string name="pref_key_auto_refresh_enabled" translatable="false">pref_key_auto_refresh</string>
     <bool name="pref_auto_refresh_default">false</bool>
 
-    <string name="pref_key_refresh_period">refresh_frequency</string>
+    <string name="pref_key_refresh_period" translatable="false">refresh_frequency</string>
     <integer name="auto_refresh_frequency_min">1</integer>
     <integer name="auto_refresh_frequency_max">24</integer>
     <integer name="auto_refresh_frequency_default">1</integer>
 
-    <string name="pref_key_wifi_only">wifi_only</string>
+    <string name="pref_key_wifi_only" translatable="false">wifi_only</string>
     <bool name="pref_wifi_only_default">true</bool>
 
-    <string name="pref_key_notification_enabled">pref_key_notification_enabled</string>
+    <string name="pref_key_notification_enabled" translatable="false">pref_key_notification_enabled</string>
     <bool name="pref_notification_enabled_default">true</bool>
 
-    <string name="pref_key_notification_type">notification_type</string>
+    <string name="pref_key_notification_type" translatable="false">notification_type</string>
     <string-array name="pref_notification_type_values">
         <item>0</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>
     </string-array>
-    <string name="pref_notification_type_default">3</string>
+    <string name="pref_notification_type_default" translatable="false">3</string>
 
-    <string name="pref_key_cache_size">cache_size</string>
+    <string name="pref_key_cache_size" translatable="false">cache_size</string>
     <integer name="cache_size_min">10</integer>
     <integer name="cache_size_max">250</integer>
     <integer name="cache_size_default">100</integer>
 
-    <string name="pref_key_cache_frequency">cache_frequency</string>
+    <string name="pref_key_cache_frequency" translatable="false">cache_frequency</string>
     <integer name="cache_frequency_min">1</integer>
     <integer name="cache_frequency_max">30</integer>
     <integer name="cache_frequency_default">7</integer>
+
+    <string name="pref_key_current_theme" translatable="false">current_theme</string>
+    <string name="current_theme_main" translatable="false">main</string>
+    <string name="current_theme_dark" translatable="false">dark</string>
+    <string-array name="current_theme_values">
+        <item>main</item>
+        <item>dark</item>
+    </string-array>
 </resources>

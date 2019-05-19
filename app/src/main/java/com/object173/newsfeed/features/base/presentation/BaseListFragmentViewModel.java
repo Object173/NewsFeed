@@ -2,15 +2,16 @@ package com.object173.newsfeed.features.base.presentation;
 
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.paging.DataSource;
 import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
 
 import com.object173.newsfeed.features.base.model.network.RequestResult;
-import com.object173.newsfeed.libs.log.LoggerFactory;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 
 public abstract class BaseListFragmentViewModel<T> extends ViewModel {
@@ -42,27 +43,24 @@ public abstract class BaseListFragmentViewModel<T> extends ViewModel {
             mListData.removeObservers(owner);
         }
 
-        if(param == null) {
-            return getListData();
-        }
-
-        if(param.equals(mParam) && mListData != null) {
+        if(mListData != null && Objects.equals(mParam, param)) {
             return mListData;
         }
         mParam = param;
-        return getListData(loadFactoryData(param));
-    }
 
-    private LiveData<PagedList<T>> getListData() {
-        if(mParam == null && mListData != null) {
-            return mListData;
+        if(mParam != null) {
+            return getListData(loadFactoryData(param));
         }
-        mParam = null;
         return getListData(loadFactoryData());
     }
 
     LiveData<Boolean> removeData(int position) {
-        return removeData(mListData.getValue().get(position));
+        if(mListData != null && mListData.getValue() != null) {
+            return removeData(mListData.getValue().get(position));
+        }
+        MutableLiveData<Boolean> result = new MutableLiveData<>();
+        result.setValue(false);
+        return result;
     }
 
     LiveData<RequestResult> getRefreshStatus() {

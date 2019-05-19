@@ -3,7 +3,7 @@
 
     <string name="add_feed">add feed</string>
     <string name="feed_link">Feed link</string>
-    <string name="add">add</string>
+    <string name="add">Add</string>
 
     <string name="share_news_chooser_title">Share news</string>
     <string name="open_link_chooser">Open source link</string>
@@ -18,9 +18,18 @@
     <string name="not_reviewed_count_format">News not viewed: %d</string>
     <string name="custom_title_switch">Use custom title</string>
     <string name="auto_updated_switch">Enabled auto updated</string>
-    <string name="main_channel_switch">Visible on main channel</string>
+    <string name="feed_category_label">Category</string>
     <string name="custom_feed_name">Custom feed name</string>
     <string name="title_activity_settings">Settings</string>
+
+    <string name="remove_category_message">Category has been deleted</string>
+
+    <string name="style_options_category">Style</string>
+    <string name="theme_preference_title">Theme</string>
+    <string-array name="current_theme_entities">
+        <item>Main</item>
+        <item>Dark</item>
+    </string-array>
 
     <string name="refresh_options_category">Refresh options</string>
     <string name="auto_refresh_enabled_title">Auto refresh</string>
@@ -66,4 +75,16 @@
 
     <string name="tab_feed_title">Feeds</string>
     <string name="tab_news_title">News</string>
+
+    <string name="date_time_format">%s %s</string>
+
+    <string name="http_fail_message">Server request failed</string>
+    <string name="incorrect_link_message">Invalid link to feed</string>
+    <string name="incorrect_response_message">Incorrect server response</string>
+    <string name="feed_exists_message">Feed has already exist</string>
+    <string name="feed_not_exists_message">This feed is not exist</string>
+    <string name="no_internet_message">Internet connection disabled</string>
+    <string name="unknown_error_message">Error loading data</string>
+
+    <string name="change_theme_message">The new theme will be applied after the application is restarted.</string>
 </resources>

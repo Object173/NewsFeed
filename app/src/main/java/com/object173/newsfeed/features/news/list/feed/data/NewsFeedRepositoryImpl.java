@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.paging.DataSource;
 
-import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import com.object173.newsfeed.features.base.data.local.LocalFeedDataSource;
 import com.object173.newsfeed.features.base.data.local.LocalNewsDataSource;
@@ -18,11 +17,8 @@ import com.object173.newsfeed.features.base.model.local.News;
 import com.object173.newsfeed.features.base.model.network.RequestResult;
 import com.object173.newsfeed.features.base.model.pref.CacheConfig;
 import com.object173.newsfeed.features.news.list.feed.domain.NewsFeedRepository;
+import com.object173.newsfeed.utils.DateUtil;
 
-import org.checkerframework.checker.nullness.compatqual.NullableDecl;
-
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -62,17 +58,13 @@ public class NewsFeedRepositoryImpl implements NewsFeedRepository {
     @Override
     public LiveData<Boolean> hideNews(long id) {
         MutableLiveData<Boolean> result = new MutableLiveData<>();
-        mExecutorService.execute(() -> {
-            result.postValue(mNewsDataSource.hideNews(id));
-        });
+        mExecutorService.execute(() -> result.postValue(mNewsDataSource.hideNews(id)));
         return result;
     }
 
     @Override
     public void checkReviewed(List<News> reviewedList) {
-        mExecutorService.execute(() -> {
-            mNewsDataSource.checkReviewed(Lists.transform(reviewedList, News::getId));
-        });
+        mExecutorService.execute(() -> mNewsDataSource.checkReviewed(Lists.transform(reviewedList, News::getId)));
     }
 
     @Override
@@ -106,16 +98,8 @@ public class NewsFeedRepositoryImpl implements NewsFeedRepository {
 
         CacheConfig cacheConfig = mPreferenceDataSource.getCacheConfig();
         int count = mNewsDataSource.insertNews(response.newsList, cacheConfig.cacheSize,
-                getCropDate(cacheConfig.cacheFrequency));
+                DateUtil.getCropDate(cacheConfig.cacheFrequency));
 
         return new Pair<>(RequestResult.SUCCESS, count);
-    }
-
-    private static Date getCropDate(final int cacheFrequency) {
-        Date currentDate = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(currentDate);
-        calendar.add(Calendar.DATE, -cacheFrequency);
-        return calendar.getTime();
     }
 }

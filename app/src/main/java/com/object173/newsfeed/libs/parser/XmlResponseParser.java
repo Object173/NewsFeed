@@ -2,8 +2,6 @@ package com.object173.newsfeed.libs.parser;
 
 import android.util.Xml;
 
-import com.object173.newsfeed.libs.log.ILogger;
-import com.object173.newsfeed.libs.log.LoggerFactory;
 import com.object173.newsfeed.libs.network.ResponseParser;
 import com.object173.newsfeed.libs.parser.xml.XmlObjectParser;
 import com.object173.newsfeed.libs.parser.xml.XmlObjectParserFactory;
@@ -16,8 +14,6 @@ import java.io.InputStream;
 import java.util.InvalidPropertiesFormatException;
 
 public class XmlResponseParser<T> implements ResponseParser<T> {
-
-    final static ILogger LOGGER = LoggerFactory.get(XmlResponseParser.class);
 
     private final XmlObjectParser[] parsers;
 

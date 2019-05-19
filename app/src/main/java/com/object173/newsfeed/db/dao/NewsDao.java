@@ -1,6 +1,6 @@
 package com.object173.newsfeed.db.dao;
 
-import com.object173.newsfeed.db.entities.DateConverter;
+import com.object173.newsfeed.db.converter.DateConverter;
 import com.object173.newsfeed.db.entities.NewsDB;
 
 import java.util.Date;

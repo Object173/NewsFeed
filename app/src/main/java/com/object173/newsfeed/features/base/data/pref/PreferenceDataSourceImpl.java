@@ -14,6 +14,8 @@ public class PreferenceDataSourceImpl implements PreferenceDataSource {
     private final Context mContext;
     private final SharedPreferences mSharedPreferences;
 
+    private static Integer mCurrentTheme;
+
     public PreferenceDataSourceImpl(Context context) {
         mContext = context;
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -55,5 +57,28 @@ public class PreferenceDataSourceImpl implements PreferenceDataSource {
                 mContext.getResources().getInteger(R.integer.cache_frequency_default));
 
         return new CacheConfig(cacheSize, cacheFrequency);
+    }
+
+    @Override
+    public int getCurrentThemeId() {
+        if(mCurrentTheme == null) {
+            return updateCurrentThemeId();
+        }
+
+        return mCurrentTheme;
+    }
+
+    @Override
+    public int updateCurrentThemeId() {
+        String theme = mSharedPreferences.getString(mContext.getString(R.string.pref_key_current_theme),
+                mContext.getString(R.string.current_theme_main));
+
+        if(theme.equals(mContext.getString(R.string.current_theme_dark))) {
+            mCurrentTheme = R.style.DarkTheme;
+        }
+        else {
+            mCurrentTheme = R.style.MainTheme;
+        }
+        return mCurrentTheme;
     }
 }

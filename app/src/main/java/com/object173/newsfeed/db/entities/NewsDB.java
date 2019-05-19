@@ -8,6 +8,8 @@ import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
+import com.object173.newsfeed.db.converter.DateConverter;
+
 import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(foreignKeys = @ForeignKey(entity = FeedDB.class, parentColumns = "link",

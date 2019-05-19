@@ -2,10 +2,11 @@ package com.object173.newsfeed.features.settings.presentation;
 
 import android.os.Bundle;
 
-import com.object173.newsfeed.R;
-
 import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceFragmentCompat;
+
+import com.google.android.material.snackbar.Snackbar;
+import com.object173.newsfeed.R;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 
@@ -29,6 +30,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 .setOnPreferenceChangeListener((preference, newValue) -> isUpdateConfigChanged = true);
         findPreference(getString(R.string.pref_key_wifi_only))
                 .setOnPreferenceChangeListener((preference, newValue) -> isUpdateConfigChanged = true);
+
+        findPreference(getString(R.string.pref_key_current_theme))
+                .setOnPreferenceChangeListener((preference, newValue) -> {
+                    if(getView() != null) {
+                        Snackbar.make(getView(), R.string.change_theme_message, Snackbar.LENGTH_LONG).show();
+                    }
+                    return true;
+                });
     }
 
     @Override

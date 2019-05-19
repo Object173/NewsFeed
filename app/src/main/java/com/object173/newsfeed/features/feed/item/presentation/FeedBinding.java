@@ -5,7 +5,9 @@ import androidx.databinding.BaseObservable;
 
 import com.object173.newsfeed.features.base.model.local.Feed;
 
-public class FeedBinding extends BaseObservable {
+import java.io.Serializable;
+
+public class FeedBinding extends BaseObservable implements Serializable {
 
     private final Feed mFeed;
     private final boolean mIsNewFeed;
@@ -14,6 +16,10 @@ public class FeedBinding extends BaseObservable {
         mFeed = feed;
         mIsNewFeed = isNewFeed;
         notifyChange();
+    }
+
+    public Feed getFeed() {
+        return mFeed;
     }
 
     public String getLink() {

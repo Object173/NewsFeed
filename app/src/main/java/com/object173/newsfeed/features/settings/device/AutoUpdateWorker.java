@@ -3,6 +3,15 @@ package com.object173.newsfeed.features.settings.device;
 import android.content.Context;
 import android.util.Pair;
 
+import androidx.annotation.NonNull;
+import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
+
 import com.object173.newsfeed.App;
 import com.object173.newsfeed.db.AppDatabase;
 import com.object173.newsfeed.features.base.data.local.LocalFeedDataSource;
@@ -14,7 +23,7 @@ import com.object173.newsfeed.features.base.data.pref.PreferenceDataSource;
 import com.object173.newsfeed.features.base.model.network.RequestResult;
 import com.object173.newsfeed.features.base.model.pref.AutoUpdateConfig;
 import com.object173.newsfeed.features.base.model.pref.NotificationConfig;
-import com.object173.newsfeed.features.settings.data.UpdateRepositoreImpl;
+import com.object173.newsfeed.features.settings.data.UpdateRepositoryImpl;
 import com.object173.newsfeed.features.settings.domain.AutoUpdateService;
 import com.object173.newsfeed.features.settings.domain.UpdateRepository;
 import com.object173.newsfeed.libs.log.ILogger;
@@ -22,15 +31,6 @@ import com.object173.newsfeed.libs.log.LoggerFactory;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import androidx.annotation.NonNull;
-import androidx.work.Constraints;
-import androidx.work.ExistingPeriodicWorkPolicy;
-import androidx.work.NetworkType;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.Worker;
-import androidx.work.WorkerParameters;
 
 public class AutoUpdateWorker extends Worker {
 
@@ -49,7 +49,7 @@ public class AutoUpdateWorker extends Worker {
         super(context, workerParams);
     }
 
-    public static void start(final Context context) {
+    private static void start(final Context context) {
         final AutoUpdateConfig config = getConfig(context);
         LOGGER.info("setConfig " + config.enabled + " " + config.updateInterval);
 
@@ -122,7 +122,7 @@ public class AutoUpdateWorker extends Worker {
         final PreferenceDataSource mPreferenceDataSource = App.getPreferenceDataSource(getApplicationContext());
         final NetworkDataSource mNetworkDataSource = App.getNetworkDataSource(getApplicationContext());
 
-        return new UpdateRepositoreImpl(mNewsDataSource, mFeedDataSource,
+        return new UpdateRepositoryImpl(mNewsDataSource, mFeedDataSource,
                 mNetworkDataSource, mPreferenceDataSource);
     }
 

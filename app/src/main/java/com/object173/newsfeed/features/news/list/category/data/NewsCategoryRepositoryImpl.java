@@ -17,9 +17,8 @@ import com.object173.newsfeed.features.base.model.local.News;
 import com.object173.newsfeed.features.base.model.network.RequestResult;
 import com.object173.newsfeed.features.base.model.pref.CacheConfig;
 import com.object173.newsfeed.features.news.list.category.domain.NewsCategoryRepository;
+import com.object173.newsfeed.utils.DateUtil;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -62,17 +61,13 @@ public class NewsCategoryRepositoryImpl implements NewsCategoryRepository {
     @Override
     public LiveData<Boolean> hideNews(long id) {
         MutableLiveData<Boolean> result = new MutableLiveData<>();
-        mExecutorService.execute(() -> {
-            result.postValue(mNewsDataSource.hideNews(id));
-        });
+        mExecutorService.execute(() -> result.postValue(mNewsDataSource.hideNews(id)));
         return result;
     }
 
     @Override
     public void checkReviewed(List<News> reviewedList) {
-        mExecutorService.execute(() -> {
-            mNewsDataSource.checkReviewed(Lists.transform(reviewedList, News::getId));
-        });
+        mExecutorService.execute(() -> mNewsDataSource.checkReviewed(Lists.transform(reviewedList, News::getId)));
     }
 
     @Override
@@ -121,16 +116,8 @@ public class NewsCategoryRepositoryImpl implements NewsCategoryRepository {
 
         CacheConfig cacheConfig = mPreferenceDataSource.getCacheConfig();
         int count = mNewsDataSource.insertNews(response.newsList, cacheConfig.cacheSize,
-                getCropDate(cacheConfig.cacheFrequency));
+                DateUtil.getCropDate(cacheConfig.cacheFrequency));
 
         return new Pair<>(RequestResult.SUCCESS, count);
-    }
-
-    private static Date getCropDate(final int cacheFrequency) {
-        Date currentDate = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(currentDate);
-        calendar.add(Calendar.DATE, -cacheFrequency);
-        return calendar.getTime();
     }
 }

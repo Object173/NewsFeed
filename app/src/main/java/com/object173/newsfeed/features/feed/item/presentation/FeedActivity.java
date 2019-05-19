@@ -2,11 +2,10 @@ package com.object173.newsfeed.features.feed.item.presentation;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
-
-import com.object173.newsfeed.features.base.presentation.SingleFragmentActivity;
 
 import androidx.fragment.app.Fragment;
+
+import com.object173.newsfeed.features.base.presentation.SingleFragmentActivity;
 
 public class FeedActivity extends SingleFragmentActivity {
 

@@ -14,9 +14,8 @@ import com.object173.newsfeed.features.base.model.local.Feed;
 import com.object173.newsfeed.features.base.model.network.RequestResult;
 import com.object173.newsfeed.features.base.model.pref.CacheConfig;
 import com.object173.newsfeed.features.feed.list.domain.FeedListRepository;
+import com.object173.newsfeed.utils.DateUtil;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -95,7 +94,7 @@ public class FeedRepositoryImpl implements FeedItemRepository, FeedListRepositor
 
             CacheConfig cacheConfig = mPreferenceDataSource.getCacheConfig();
             mNewsDataSource.insertNews(response.newsList, cacheConfig.cacheSize,
-                    getCropDate(cacheConfig.cacheFrequency));
+                    DateUtil.getCropDate(cacheConfig.cacheFrequency));
 
             result.postValue(RequestResult.SUCCESS);
         });
@@ -107,13 +106,5 @@ public class FeedRepositoryImpl implements FeedItemRepository, FeedListRepositor
         MutableLiveData<Boolean> result = new MutableLiveData<>();
         mExecutorService.execute(() -> result.postValue(mFeedDataSource.removeFeed(feedLink)));
         return result;
-    }
-
-    private static Date getCropDate(final int cacheFrequency) {
-        Date currentDate = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(currentDate);
-        calendar.add(Calendar.DATE, -cacheFrequency);
-        return calendar.getTime();
     }
 }

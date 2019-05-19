@@ -6,6 +6,20 @@
     android:layout_height="match_parent">
 
     <androidx.preference.PreferenceCategory
+        android:title="@string/style_options_category">
+
+        <androidx.preference.ListPreference
+            android:key="@string/pref_key_current_theme"
+            android:title="@string/theme_preference_title"
+            android:dialogTitle="@string/theme_preference_title"
+            android:entries="@array/current_theme_entities"
+            android:entryValues="@array/current_theme_values"
+            android:defaultValue="@string/current_theme_main"
+            android:summary="%s"/>
+
+    </androidx.preference.PreferenceCategory>
+
+    <androidx.preference.PreferenceCategory
         android:title="@string/refresh_options_category">
 
         <androidx.preference.SwitchPreference

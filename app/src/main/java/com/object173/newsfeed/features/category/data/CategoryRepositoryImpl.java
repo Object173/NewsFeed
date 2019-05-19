@@ -34,9 +34,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     @Override
     public LiveData<Boolean> removeCategory(Category category) {
         MutableLiveData<Boolean> result = new MutableLiveData<>();
-        mExecutorService.execute(() -> {
-            result.postValue(mDataSource.removeCategory(category));
-        });
+        mExecutorService.execute(() -> result.postValue(mDataSource.removeCategory(category)));
         return result;
     }
 

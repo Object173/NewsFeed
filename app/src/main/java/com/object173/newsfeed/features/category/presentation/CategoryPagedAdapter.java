@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import com.object173.newsfeed.R;
 import com.object173.newsfeed.databinding.ItemCategoryListBinding;
 import com.object173.newsfeed.features.base.model.local.Category;
+import com.object173.newsfeed.features.base.presentation.OnItemClickListener;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -15,13 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class CategoryPagedAdapter extends PagedListAdapter<Category, CategoryPagedAdapter.CategoryViewHolder> {
 
-    private final OnCategoryClickListener mCategoryClickListener;
+    private final OnItemClickListener<Category> mCategoryClickListener;
 
-    public interface OnCategoryClickListener {
-        void onClick(Category category);
-    }
-
-    CategoryPagedAdapter(OnCategoryClickListener categoryClickListener) {
+    CategoryPagedAdapter(OnItemClickListener<Category> categoryClickListener) {
         super(new CategoryDiffUtilCallback());
         this.mCategoryClickListener = categoryClickListener;
     }
@@ -38,7 +35,7 @@ public class CategoryPagedAdapter extends PagedListAdapter<Category, CategoryPag
     @Override
     public void onBindViewHolder(@NonNull final CategoryViewHolder categoryViewHolder, final int position) {
         categoryViewHolder.bindCategory(getItem(position));
-        categoryViewHolder.itemView.setOnClickListener(v -> mCategoryClickListener.onClick(getItem(position)));
+        categoryViewHolder.itemView.setOnClickListener(v -> mCategoryClickListener.onItemClick(getItem(position)));
     }
 
     static class CategoryViewHolder extends RecyclerView.ViewHolder {

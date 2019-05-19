@@ -3,6 +3,7 @@
 
     <data>
         <import type="android.view.View"/>
+        <import type="com.object173.newsfeed.utils.DateUtil"/>
         <variable
             name="feed"
             type="com.object173.newsfeed.features.base.model.local.Feed"/>
@@ -31,7 +32,7 @@
                 android:id="@+id/updatedTV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{feed.updated.toString()}"/>
+                android:text="@{DateUtil.getFullDateTime(context, feed.updated)}"/>
 
             <TextView
                 android:id="@+id/notReviewedTV"

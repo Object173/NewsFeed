@@ -1,52 +1,38 @@
 package com.object173.newsfeed.features.feed.item.presentation;
 
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+
 import com.object173.newsfeed.features.base.model.local.Feed;
 import com.object173.newsfeed.features.base.model.network.RequestResult;
 import com.object173.newsfeed.features.feed.item.domain.FeedInteractor;
 
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
-import androidx.lifecycle.ViewModel;
-
 class FeedViewModel extends ViewModel {
 
     private final FeedInteractor mFeedInteractor;
-
-    private final LiveData<Feed> mFeed;
     private LiveData<RequestResult> mLoadStatus;
 
-    private boolean mIsNewFeed;
-
-    FeedViewModel(FeedInteractor feedInteractor, String feedLink) {
+    FeedViewModel(FeedInteractor feedInteractor) {
         mFeedInteractor = feedInteractor;
-
-        if(feedLink != null) {
-            mFeed = Transformations.map(mFeedInteractor.getFeed(feedLink), feed -> {
-                mIsNewFeed = (feed == null);
-                if(feed == null) {
-                    Feed newFeed = new Feed();
-                    newFeed.setLink(feedLink);
-                    return newFeed;
-                }
-                return feed;
-            });
-        }
-        else {
-            mFeed = new MutableLiveData<>();
-            ((MutableLiveData<Feed>) mFeed).setValue(new Feed());
-            mIsNewFeed = true;
-        }
     }
 
-    LiveData<Feed> getFeed() {
-        return mFeed;
+    LiveData<Feed> getFeed(String feedLink) {
+        if(feedLink == null) {
+            MutableLiveData<Feed> feed = new MutableLiveData<>();
+            feed.setValue(new Feed());
+            return feed;
+        }
+        return mFeedInteractor.getFeed(feedLink);
     }
 
-    LiveData<RequestResult> loadFeed() {
-        return mLoadStatus = mIsNewFeed ? mFeedInteractor.loadFeed(mFeed.getValue()) :
-                mFeedInteractor.updateFeed(mFeed.getValue());
+    LiveData<RequestResult> loadFeed(Feed feed) {
+        return mLoadStatus = mFeedInteractor.loadFeed(feed);
+    }
+
+    LiveData<RequestResult> updateFeed(Feed feed) {
+        return mLoadStatus = mFeedInteractor.updateFeed(feed);
     }
 
     LiveData<RequestResult> getIsRefreshed() {
@@ -55,9 +41,5 @@ class FeedViewModel extends ViewModel {
     void cancelLoadFeed(LifecycleOwner lifecycleOwner) {
         mLoadStatus.removeObservers(lifecycleOwner);
         mLoadStatus = null;
-    }
-
-    public boolean isNewFeed() {
-        return mIsNewFeed;
     }
 }

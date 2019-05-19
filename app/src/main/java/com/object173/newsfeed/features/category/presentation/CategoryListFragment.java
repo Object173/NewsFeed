@@ -7,24 +7,27 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.paging.PagedListAdapter;
+
 import com.object173.newsfeed.R;
 import com.object173.newsfeed.features.base.model.local.Category;
 import com.object173.newsfeed.features.base.presentation.BaseListFragment;
 import com.object173.newsfeed.features.base.presentation.BaseListFragmentViewModel;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.paging.PagedListAdapter;
-
 public class CategoryListFragment extends BaseListFragment<Category, CategoryPagedAdapter.CategoryViewHolder> {
 
-    private static final String EXTRA_CATEGORY = "category";
-
-    public static CategoryListFragment newInstance() {
+    static CategoryListFragment newInstance() {
         return new CategoryListFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -35,26 +38,12 @@ public class CategoryListFragment extends BaseListFragment<Category, CategoryPag
 
     @Override
     protected PagedListAdapter<Category, CategoryPagedAdapter.CategoryViewHolder> getPagedAdapter() {
-        return new CategoryPagedAdapter(this::returnResult);
+        return new CategoryPagedAdapter(this);
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        setupActionBar();
-    }
-
-    public static String getCategory(Intent intent) {
-        return intent.getStringExtra(EXTRA_CATEGORY);
-    }
-
-    private void returnResult(Category category) {
-        final Intent intent = new Intent();
-        intent.putExtra(EXTRA_CATEGORY, category.getTitle());
-
-        getActivity().setResult(Activity.RESULT_OK, intent);
-        getActivity().finish();
+    protected int getRemoveMessage() {
+        return R.string.remove_category_message;
     }
 
     @Override
@@ -63,34 +52,25 @@ public class CategoryListFragment extends BaseListFragment<Category, CategoryPag
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    private void setupActionBar() {
-        ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(android.R.drawable.ic_menu_close_clear_cancel);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-    }
-
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.add_feed:
-                AddCategoryDialog dialog = AddCategoryDialog.newInstance();
-                dialog.setTargetFragment(this, AddCategoryDialog.REQUEST_CODE);
-                dialog.show(getFragmentManager(), AddCategoryDialog.TAG);
+    public boolean onOptionsItemSelected(@NonNull final MenuItem item) {
+        if (item.getItemId() == R.id.add_feed) {
+            if(getActivity() == null) {
                 return true;
-            case android.R.id.home:
-                returnResult(new Category(null));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            }
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            AddCategoryDialog dialog = AddCategoryDialog.newInstance();
+            dialog.setTargetFragment(this, AddCategoryDialog.REQUEST_CODE);
+            dialog.show(fragmentManager, AddCategoryDialog.TAG);
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(requestCode == AddCategoryDialog.REQUEST_CODE) {
-            if(resultCode == Activity.RESULT_OK) {
+            if(resultCode == Activity.RESULT_OK && data != null) {
                 mViewModel.addData(new Category(AddCategoryDialog.getCategoryTitle(data)));
             }
         }

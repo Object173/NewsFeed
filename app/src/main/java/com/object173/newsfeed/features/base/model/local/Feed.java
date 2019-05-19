@@ -1,8 +1,9 @@
 package com.object173.newsfeed.features.base.model.local;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Feed {
+public class Feed implements Serializable {
     private String link;
     private final String title;
     private final String description;

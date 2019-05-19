@@ -11,19 +11,18 @@ import com.object173.newsfeed.features.base.model.local.Feed;
 import com.object173.newsfeed.features.base.model.network.RequestResult;
 import com.object173.newsfeed.features.base.model.pref.CacheConfig;
 import com.object173.newsfeed.features.settings.domain.UpdateRepository;
+import com.object173.newsfeed.utils.DateUtil;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
-public class UpdateRepositoreImpl implements UpdateRepository {
+public class UpdateRepositoryImpl implements UpdateRepository {
 
     private final LocalNewsDataSource mNewsDataSource;
     private final LocalFeedDataSource mFeedDataSource;
     private final NetworkDataSource mNetworkDataSource;
     private final PreferenceDataSource mPreferenceDataSource;
 
-    public UpdateRepositoreImpl(LocalNewsDataSource newsDataSource, LocalFeedDataSource feedDataSource,
+    public UpdateRepositoryImpl(LocalNewsDataSource newsDataSource, LocalFeedDataSource feedDataSource,
                                 NetworkDataSource networkDataSource, PreferenceDataSource preferenceDataSource) {
         mNewsDataSource = newsDataSource;
         mFeedDataSource = feedDataSource;
@@ -58,16 +57,8 @@ public class UpdateRepositoreImpl implements UpdateRepository {
 
         CacheConfig cacheConfig = mPreferenceDataSource.getCacheConfig();
         int count = mNewsDataSource.insertNews(response.newsList, cacheConfig.cacheSize,
-                getCropDate(cacheConfig.cacheFrequency));
+                DateUtil.getCropDate(cacheConfig.cacheFrequency));
 
         return new Pair<>(RequestResult.SUCCESS, count);
-    }
-
-    private static Date getCropDate(final int cacheFrequency) {
-        Date currentDate = new Date();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(currentDate);
-        calendar.add(Calendar.DATE, -cacheFrequency);
-        return calendar.getTime();
     }
 }

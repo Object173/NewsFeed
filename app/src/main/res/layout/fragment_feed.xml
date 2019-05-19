@@ -79,6 +79,13 @@
                     android:text="@string/auto_updated_switch"
                     android:layout_marginEnd="4dp"/>
 
+                <TextView
+                    android:id="@+id/categoryTV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/feed_category_label"
+                    android:padding="4dp"/>
+
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/categoryButton"
                     android:layout_width="match_parent"

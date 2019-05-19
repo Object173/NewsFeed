@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import com.object173.newsfeed.R;
 import com.object173.newsfeed.databinding.ItemFeedListBinding;
 import com.object173.newsfeed.features.base.model.local.Feed;
+import com.object173.newsfeed.features.base.presentation.OnItemClickListener;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -15,14 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class FeedPagedAdapter extends PagedListAdapter<Feed, FeedPagedAdapter.FeedViewHolder> {
 
-    private final OnFeedClickListener mFeedClickListener;
+    private final OnItemClickListener<Feed> mFeedClickListener;
 
-    public interface OnFeedClickListener {
-        void onClick(Feed feed);
-        boolean onLongClick(Feed feed);
-    }
-
-    FeedPagedAdapter(final OnFeedClickListener feedClickListener) {
+    FeedPagedAdapter(final OnItemClickListener<Feed> feedClickListener) {
         super(new FeedDiffUtilCallback());
         mFeedClickListener = feedClickListener;
     }
@@ -41,8 +37,11 @@ public class FeedPagedAdapter extends PagedListAdapter<Feed, FeedPagedAdapter.Fe
         Feed feed = getItem(position);
         feedViewHolder.bindFeed(feed);
 
-        feedViewHolder.itemView.setOnClickListener(view -> mFeedClickListener.onClick(feed));
-        feedViewHolder.itemView.setOnLongClickListener(view -> mFeedClickListener.onLongClick(feed));
+        feedViewHolder.itemView.setOnClickListener(view -> mFeedClickListener.onItemClick(feed));
+        feedViewHolder.itemView.setOnLongClickListener(view -> {
+            mFeedClickListener.onItemLongClick(feed);
+            return true;
+        });
     }
 
     static class FeedViewHolder extends RecyclerView.ViewHolder {

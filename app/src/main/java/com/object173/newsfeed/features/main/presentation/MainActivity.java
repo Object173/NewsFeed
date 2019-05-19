@@ -8,29 +8,37 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProviders;
+
 import com.object173.newsfeed.R;
 import com.object173.newsfeed.databinding.ActivityMainBinding;
-import com.object173.newsfeed.features.base.presentation.BaseListFragment;
+import com.object173.newsfeed.features.base.presentation.BaseActivity;
+import com.object173.newsfeed.features.base.presentation.ItemClickEvent;
 import com.object173.newsfeed.features.feed.item.presentation.FeedActivity;
 import com.object173.newsfeed.features.feed.list.presentation.FeedListFragment;
+import com.object173.newsfeed.features.news.item.presentation.NewsActivity;
+import com.object173.newsfeed.features.news.list.NewsListFragment;
 import com.object173.newsfeed.features.news.list.category.presentation.NewsCategoryFragment;
+import com.object173.newsfeed.features.news.list.feed.presentation.NewsFeedActivity;
+import com.object173.newsfeed.features.news.list.feed.presentation.NewsFeedFragment;
 import com.object173.newsfeed.features.settings.presentation.SettingsActivity;
 
 import java.util.Arrays;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModelProviders;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private static final String KEY_CATEGORY = "category";
+    private static final String KEY_PAGE = "current_page";
 
     private static final String TAG_FEED = "feed";
     private static final String TAG_NEWS = "news";
+
+    private FeedListFragment mFeedListFragment;
+    private NewsListFragment mNewsListFragment;
 
     private MainActivityViewModel mViewModel;
     private ActivityMainBinding mBinding;
@@ -38,10 +46,9 @@ public class MainActivity extends AppCompatActivity {
     private String mCurrentCategory;
     private String[] mCategoriesTitle;
 
-    private Bundle listFragmentBundle;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setHomeButtonEnabled(false);
         super.onCreate(savedInstanceState);
 
         mViewModel = ViewModelProviders.of(this, new MainViewModelFactory(getApplication()))
@@ -53,14 +60,7 @@ public class MainActivity extends AppCompatActivity {
         }
         mCategoriesTitle = new String[] {getString(R.string.non_category_title)};
 
-        mBinding.tabs.setup(this, getSupportFragmentManager(), R.id.tabContent);
-
-        listFragmentBundle = BaseListFragment.getBundle(mCurrentCategory);
-
-        mBinding.tabs.addTab(mBinding.tabs.newTabSpec(TAG_FEED).setIndicator(getString(R.string.tab_feed_title)),
-                FeedListFragment.class, listFragmentBundle);
-        mBinding.tabs.addTab(mBinding.tabs.newTabSpec(TAG_NEWS).setIndicator(getString(R.string.tab_news_title)),
-                NewsCategoryFragment.class, listFragmentBundle);
+        initFragments(savedInstanceState);
 
         mViewModel.getCategories().observe(this, strings -> {
             mCategoriesTitle = new String[strings.size() + 1];
@@ -72,21 +72,100 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void initFragments(Bundle savedInstanceState) {
+        boolean isTwoFragmentActivity = mBinding.feedFrame == null;
+
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+
+        if(isTwoFragmentActivity) {
+
+            mFeedListFragment = (FeedListFragment) manager.findFragmentByTag(TAG_FEED);
+            if(mFeedListFragment == null) {
+                mFeedListFragment = new FeedListFragment();
+                transaction.add(mBinding.frameLayout.getId(), mFeedListFragment, TAG_FEED);
+            }
+
+            mNewsListFragment = (NewsListFragment) manager.findFragmentByTag(TAG_NEWS);
+            if(mNewsListFragment == null) {
+                mNewsListFragment = new NewsCategoryFragment();
+                transaction.add(mBinding.frameLayout.getId(), mNewsListFragment, TAG_NEWS);
+                transaction.hide(mNewsListFragment);
+            }
+
+            mFeedListFragment.getClickedItem().observe(this, event -> {
+                if(event.mType == ItemClickEvent.Type.CLICK) {
+                    startActivity(NewsFeedActivity.getIntent(this, event.mItem.getLink()));
+                }
+                else {
+                    startActivity(FeedActivity.getUpdateIntent(this, event.mItem.getLink()));
+                }
+            });
+
+            transaction.commit();
+
+            mBinding.bottomNavigation.setOnNavigationItemSelectedListener(item -> {
+                        FragmentTransaction newTransaction = getSupportFragmentManager().beginTransaction();
+                        switch (item.getItemId()) {
+                            case R.id.feed_page:
+                                newTransaction.show(mFeedListFragment);
+                                newTransaction.hide(mNewsListFragment);
+                                newTransaction.commit();
+                                return true;
+                            case R.id.add_page:
+                                startActivity(FeedActivity.getLoadIntent(this));
+                                return false;
+                            case R.id.news_page:
+                                newTransaction.hide(mFeedListFragment);
+                                newTransaction.show(mNewsListFragment);
+                                newTransaction.commit();
+                                return true;
+                            default:
+                                return super.onOptionsItemSelected(item);
+                        }
+                    });
+
+            if(savedInstanceState != null) {
+                String tag = savedInstanceState.getString(KEY_PAGE);
+                mBinding.bottomNavigation.setSelectedItemId(tag != null && tag.equals(TAG_NEWS) ? 1 : 0);
+            }
+        }
+        else {
+            mFeedListFragment = (FeedListFragment) manager.findFragmentByTag(TAG_FEED);
+            if(mFeedListFragment == null) {
+                mFeedListFragment = new FeedListFragment();
+                transaction.add(mBinding.feedFrame.getId(), mFeedListFragment, TAG_FEED);
+            }
+
+            mNewsListFragment = (NewsListFragment) manager.findFragmentByTag(TAG_NEWS);
+            if(mNewsListFragment == null) {
+                mNewsListFragment = new NewsFeedFragment();
+                transaction.add(mBinding.newsFrame.getId(), mNewsListFragment, TAG_NEWS);
+            }
+
+            mFeedListFragment.getClickedItem().observe(this, event -> {
+                if(event.mType == ItemClickEvent.Type.CLICK) {
+                    mNewsListFragment.setParam(event.mItem.getLink());
+                }
+                else {
+                    startActivity(FeedActivity.getUpdateIntent(this, event.mItem.getLink()));
+                }
+            });
+
+            transaction.commitNow();
+        }
+
+        mNewsListFragment.getClickedItem().observe(this, event ->
+                startActivity(NewsActivity.getIntent(this, event.mItem.getId())));
+    }
+
     private void setCurrentCategory(String category) {
         mCurrentCategory = category;
 
-        FragmentManager manager = getSupportFragmentManager();
+        mFeedListFragment.setParam(category);
 
-        Fragment feedFragment = manager.findFragmentByTag(TAG_FEED);
-        Fragment newsFragment = manager.findFragmentByTag(TAG_NEWS);
-
-        BaseListFragment.putParam(listFragmentBundle, category);
-
-        if(feedFragment != null) {
-            ((BaseListFragment)feedFragment).setParam(category);
-        }
-        if(newsFragment != null) {
-            ((BaseListFragment)newsFragment).setParam(category);
+        if(mNewsListFragment instanceof NewsCategoryFragment) {
+            mNewsListFragment.setParam(category);
         }
     }
 
@@ -94,11 +173,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(KEY_CATEGORY, mCurrentCategory);
+
+        if(mBinding != null && mBinding.bottomNavigation != null) {
+            outState.putString(KEY_PAGE, mBinding.bottomNavigation.getSelectedItemId() == 0 ?
+                    TAG_FEED : TAG_NEWS);
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.fragment_feed_list, menu);
+        getMenuInflater().inflate(R.menu.activity_main, menu);
 
         if(mCategoriesTitle == null) {
             return true;

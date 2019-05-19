@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/feed_page"
+        android:enabled="true"
+        android:title="@string/tab_feed_title"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/add_page"
+        android:enabled="true"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="@string/add_feed"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/news_page"
+        android:enabled="true"
+        android:title="@string/tab_news_title"
+        app:showAsAction="always" />
+</menu>

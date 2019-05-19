@@ -1,9 +1,7 @@
 package com.object173.newsfeed.db.dao;
 
-import com.object173.newsfeed.db.entities.DateConverter;
 import com.object173.newsfeed.db.entities.FeedDB;
 
-import java.util.Date;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
@@ -12,7 +10,6 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Transaction;
-import androidx.room.TypeConverters;
 import androidx.room.Update;
 
 @Dao
