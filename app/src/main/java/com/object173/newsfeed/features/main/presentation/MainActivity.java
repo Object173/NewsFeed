@@ -72,6 +72,72 @@ public class MainActivity extends BaseActivity {
         });
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(KEY_CATEGORY, mCurrentCategory);
+
+        if(mBinding != null && mBinding.bottomNavigation != null) {
+            outState.putString(KEY_PAGE, mBinding.bottomNavigation.getSelectedItemId() == 0 ?
+                    TAG_FEED : TAG_NEWS);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_main, menu);
+
+        if(mCategoriesTitle == null) {
+            return true;
+        }
+
+        MenuItem menuItem = menu.findItem(R.id.categorySpinner);
+        View view = menuItem.getActionView();
+        if (view instanceof Spinner)
+        {
+            final Spinner spinner = (Spinner) view;
+            spinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
+                    mCategoriesTitle));
+
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> arg0, View arg1,
+                                           int position, long id) {
+                    if(position == 0) {
+                        setCurrentCategory(null);
+                    }
+                    else {
+                        setCurrentCategory((String) spinner.getAdapter().getItem(position));
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> arg0) {
+                    spinner.setSelection(0);
+                }
+            });
+
+            int position = mCurrentCategory != null ? Arrays.binarySearch(mCategoriesTitle, mCurrentCategory) : 0;
+            spinner.setSelection(position > 0 ? position : 0);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.add_feed:
+                startActivity(FeedActivity.getLoadIntent(this));
+                return true;
+            case R.id.settings:
+                startActivity(SettingsActivity.getIntent(this));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private void initFragments(Bundle savedInstanceState) {
         boolean isTwoFragmentActivity = mBinding.feedFrame == null;
 
@@ -79,14 +145,11 @@ public class MainActivity extends BaseActivity {
         FragmentTransaction transaction = manager.beginTransaction();
 
         if(isTwoFragmentActivity) {
-
-            mFeedListFragment = (FeedListFragment) manager.findFragmentByTag(TAG_FEED);
             if(mFeedListFragment == null) {
                 mFeedListFragment = new FeedListFragment();
                 transaction.add(mBinding.frameLayout.getId(), mFeedListFragment, TAG_FEED);
             }
 
-            mNewsListFragment = (NewsListFragment) manager.findFragmentByTag(TAG_NEWS);
             if(mNewsListFragment == null) {
                 mNewsListFragment = new NewsCategoryFragment();
                 transaction.add(mBinding.frameLayout.getId(), mNewsListFragment, TAG_NEWS);
@@ -166,72 +229,6 @@ public class MainActivity extends BaseActivity {
 
         if(mNewsListFragment instanceof NewsCategoryFragment) {
             mNewsListFragment.setParam(category);
-        }
-    }
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString(KEY_CATEGORY, mCurrentCategory);
-
-        if(mBinding != null && mBinding.bottomNavigation != null) {
-            outState.putString(KEY_PAGE, mBinding.bottomNavigation.getSelectedItemId() == 0 ?
-                    TAG_FEED : TAG_NEWS);
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_main, menu);
-
-        if(mCategoriesTitle == null) {
-            return true;
-        }
-
-        MenuItem menuItem = menu.findItem(R.id.categorySpinner);
-        View view = menuItem.getActionView();
-        if (view instanceof Spinner)
-        {
-            final Spinner spinner = (Spinner) view;
-            spinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
-                    mCategoriesTitle));
-
-            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> arg0, View arg1,
-                                           int position, long id) {
-                    if(position == 0) {
-                        setCurrentCategory(null);
-                    }
-                    else {
-                        setCurrentCategory((String) spinner.getAdapter().getItem(position));
-                    }
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> arg0) {
-                    spinner.setSelection(0);
-                }
-            });
-
-            int position = mCurrentCategory != null ? Arrays.binarySearch(mCategoriesTitle, mCurrentCategory) : 0;
-            spinner.setSelection(position > 0 ? position : 0);
-        }
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.add_feed:
-                startActivity(FeedActivity.getLoadIntent(this));
-                return true;
-            case R.id.settings:
-                startActivity(SettingsActivity.getIntent(this));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
     }
 }
